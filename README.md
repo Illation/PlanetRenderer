@@ -7,9 +7,13 @@ I regularly post updates about this project on my blog: http://robert-lindner.co
 
 ####Terrain
 There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum.
-<div
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/58LZH"><a href="//imgur.com/58LZH">OpenGL planet terrain generation</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-</div>
+
+![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/dC9CQMP.jpg)
+![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/v9xjw0m.jpg)
+![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/D45nHv8.jpg)
+![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/tjOinep.jpg)
+
+[Imgur Gallery](http://imgur.com/gallery/58LZH)
 
 ####Framework
 A lot of the code for the framework is copied from my openGL framework, but since I want a barebones techdemo as a result in order to keep all the code relevant, I did not code this in the framework itself.
