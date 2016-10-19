@@ -30,7 +30,7 @@ private:
 		SOLID,
 		WIREFRAME,
 		OVERLAY
-	} renderMode;
+	} renderMode = OVERLAY;
 
 	//Planet tech
 	Planet *m_pPlanet;

@@ -24,9 +24,9 @@ void Transform::UpdateTransforms()
 {
 	m_Tranform = glm::translate(m_Position)*glm::toMat4(m_Rotation)*glm::scale(m_Scale);
 
-	m_Forward = m_Rotation*glm::vec3(0, 0, 1);
-	m_Right = m_Rotation*glm::vec3(1, 0, 0);
-	m_Up = glm::cross(m_Forward, m_Right);
+	m_Forward = glm::normalize(m_Rotation*glm::vec3(0, 0, 1));
+	m_Right = glm::normalize(m_Rotation*glm::vec3(1, 0, 0));
+	m_Up = glm::normalize(glm::cross(m_Forward, m_Right));
 }
 
 Transform::~Transform()

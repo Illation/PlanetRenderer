@@ -1,13 +1,18 @@
 #include "stdafx.h"
 #include "Planet.h"
 
+#include <limits>
+
 #include "Shader.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "Frustum.h"
 
 Planet::Planet()
 {
 	m_pTransform = new Transform();
+
+	m_pFrustum = new Frustum();
 	
 	m_pTriangleShader = new Shader("./Shaders/triangle.glsl");
 	m_pWireShader = new Shader("./Shaders/wire.glsl");
@@ -15,6 +20,27 @@ Planet::Planet()
 
 void Planet::Init()
 {
+	//Generate icosahedron
+	float ratio = (1.f + sqrt(5.f)) / 2.f;
+	float scale = m_Radius / glm::length(glm::vec2(ratio, 1.f));
+	ratio *= scale;
+
+	//X plane
+	m_Icosahedron.push_back(glm::vec3(ratio, 0, -scale));		//rf 0
+	m_Icosahedron.push_back(glm::vec3(-ratio, 0, -scale));		//lf 1
+	m_Icosahedron.push_back(glm::vec3(ratio, 0, scale));		//rb 2
+	m_Icosahedron.push_back(glm::vec3(-ratio, 0, scale));		//lb 3
+	//Y plane													 
+	m_Icosahedron.push_back(glm::vec3(0, -scale, ratio));		//db 4
+	m_Icosahedron.push_back(glm::vec3(0, -scale, -ratio));		//df 5
+	m_Icosahedron.push_back(glm::vec3(0, scale, ratio));		//ub 6
+	m_Icosahedron.push_back(glm::vec3(0, scale, -ratio));		//uf 7
+	//Z plane													 
+	m_Icosahedron.push_back(glm::vec3(-scale, ratio, 0));		//lu 8
+	m_Icosahedron.push_back(glm::vec3(-scale, -ratio, 0));		//ld 9
+	m_Icosahedron.push_back(glm::vec3(scale, ratio, 0));		//ru 10
+	m_Icosahedron.push_back(glm::vec3(scale, -ratio, 0));		//rd 11
+
 	//Handle planet material
 	m_pWireShader->Build();
 	glUseProgram(m_pWireShader->GetProgram());
@@ -49,19 +75,36 @@ void Planet::Init()
 	//unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+
+
+	m_pFrustum->Init();
 }
 
 void Planet::Update()
 {
 	m_pTransform->SetPosition(0, 0, 0);
-	m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), -(GLfloat)TIME->DeltaTime() * 0.4f, glm::vec3(0.5f, 1.0f, 0.0f)));
+	if (INPUT->IsKeyboardKeyPressed('r'))m_Rotate = !m_Rotate;
+	if(m_Rotate && !m_LockFrustum)m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), -(GLfloat)TIME->DeltaTime() * 0.1f, glm::vec3(0.5f, 1.0f, 0.0f)));
 
 	m_pTransform->UpdateTransforms();
+
+	//Frustum update
+	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_SPACE))m_LockFrustum = !m_LockFrustum;
+	if (!m_LockFrustum)
+	{
+		m_pFrustum->SetCullTransform(m_pTransform->GetTransform());
+		m_pFrustum->SetToCamera(CAMERA);
+		m_pFrustum->Update();
+		m_CamForward = CAMERA->GetTransform()->GetForward();
+		m_CamPos = CAMERA->GetTransform()->GetPosition();
+	}
+	m_ToWorld = m_pTransform->GetTransform();
 
 
 	//Change Planet
 	//***************
-	bool geometryChanged = false;
+	bool geometryChanged = true;
 	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_UP))
 	{
 		m_MaxLevel++;
@@ -72,11 +115,11 @@ void Planet::Update()
 		m_MaxLevel--;
 		geometryChanged = true;
 	}
+	if (CAMERA->HasMoved())geometryChanged = true;
 	if (geometryChanged)
 	{
 		//Change the actual vertex positions
 		GenerateGeometry();
-
 		//Bind Object vertex array
 		glBindVertexArray(m_VAO);
 
@@ -88,94 +131,100 @@ void Planet::Update()
 		//Done Modifying
 		glBindVertexArray(0);
 	}
-
 	std::cout << "FPS: " << TIME->FPS() << " - Vertices: " << m_Positions.size() <<std::endl;
+	//std::cout << std::endl << std::endl << std::endl;
 }
 
 void Planet::GenerateGeometry()
 {
-	//Generate icosahedron
-	float ratio = (1.f + sqrt(5.f)) / 2.f;
-	float scale = m_Radius/glm::length(glm::vec2(ratio, 1.f));
-	ratio *= scale;
-
-	std::vector<glm::vec3> ico;
-
-	//X plane
-	ico.push_back(glm::vec3(ratio, 0, -scale));		//rf 0
-	ico.push_back(glm::vec3(-ratio, 0, -scale));	//lf 1
-	ico.push_back(glm::vec3(ratio, 0, scale));		//rb 2
-	ico.push_back(glm::vec3(-ratio, 0, scale));		//lb 3
-	//Y plane													 
-	ico.push_back(glm::vec3(0, -scale, ratio));		//db 4
-	ico.push_back(glm::vec3(0, -scale, -ratio));	//df 5
-	ico.push_back(glm::vec3(0, scale, ratio));		//ub 6
-	ico.push_back(glm::vec3(0, scale, -ratio));		//uf 7
-	//Z plane													 
-	ico.push_back(glm::vec3(-scale, ratio, 0));		//lu 8
-	ico.push_back(glm::vec3(-scale, -ratio, 0));	//ld 9
-	ico.push_back(glm::vec3(scale, ratio, 0));		//ru 10
-	ico.push_back(glm::vec3(scale, -ratio, 0));		//rd 11
-
 	m_Positions.clear();
 
-	RecursiveTriangle(ico[1], ico[3], ico[8], 0);
-	RecursiveTriangle(ico[1], ico[3], ico[9], 0);
-	RecursiveTriangle(ico[0], ico[2], ico[10], 0);
-	RecursiveTriangle(ico[0], ico[2], ico[11], 0);
+	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[8], 0, true);
+	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[9], 0, true);
+	RecursiveTriangle(m_Icosahedron[0], m_Icosahedron[2], m_Icosahedron[10], 0, true);
+	RecursiveTriangle(m_Icosahedron[0], m_Icosahedron[2], m_Icosahedron[11], 0, true);
 
-	RecursiveTriangle(ico[5], ico[7], ico[0], 0);
-	RecursiveTriangle(ico[5], ico[7], ico[1], 0);
-	RecursiveTriangle(ico[4], ico[6], ico[2], 0);
-	RecursiveTriangle(ico[4], ico[6], ico[3], 0);
+	RecursiveTriangle(m_Icosahedron[5], m_Icosahedron[7], m_Icosahedron[0], 0, true);
+	RecursiveTriangle(m_Icosahedron[5], m_Icosahedron[7], m_Icosahedron[1], 0, true);
+	RecursiveTriangle(m_Icosahedron[4], m_Icosahedron[6], m_Icosahedron[2], 0, true);
+	RecursiveTriangle(m_Icosahedron[4], m_Icosahedron[6], m_Icosahedron[3], 0, true);
 
-	RecursiveTriangle(ico[9], ico[11], ico[4], 0);
-	RecursiveTriangle(ico[9], ico[11], ico[5], 0);
-	RecursiveTriangle(ico[8], ico[10], ico[6], 0);
-	RecursiveTriangle(ico[8], ico[10], ico[7], 0);
+	RecursiveTriangle(m_Icosahedron[9], m_Icosahedron[11], m_Icosahedron[4], 0, true);
+	RecursiveTriangle(m_Icosahedron[9], m_Icosahedron[11], m_Icosahedron[5], 0, true);
+	RecursiveTriangle(m_Icosahedron[8], m_Icosahedron[10], m_Icosahedron[6], 0, true);
+	RecursiveTriangle(m_Icosahedron[8], m_Icosahedron[10], m_Icosahedron[7], 0, true);
 
-	RecursiveTriangle(ico[1], ico[7], ico[8], 0);
-	RecursiveTriangle(ico[1], ico[5], ico[9], 0);
-	RecursiveTriangle(ico[0], ico[7], ico[10], 0);
-	RecursiveTriangle(ico[0], ico[5], ico[11], 0);
+	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[7], m_Icosahedron[8], 0, true);
+	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[5], m_Icosahedron[9], 0, true);
+	RecursiveTriangle(m_Icosahedron[0], m_Icosahedron[7], m_Icosahedron[10], 0, true);
+	RecursiveTriangle(m_Icosahedron[0], m_Icosahedron[5], m_Icosahedron[11], 0, true);
 
-	RecursiveTriangle(ico[3], ico[6], ico[8], 0);
-	RecursiveTriangle(ico[3], ico[4], ico[9], 0);
-	RecursiveTriangle(ico[2], ico[6], ico[10], 0);
-	RecursiveTriangle(ico[2], ico[4], ico[11], 0);
+	RecursiveTriangle(m_Icosahedron[3], m_Icosahedron[6], m_Icosahedron[8], 0, true);
+	RecursiveTriangle(m_Icosahedron[3], m_Icosahedron[4], m_Icosahedron[9], 0, true);
+	RecursiveTriangle(m_Icosahedron[2], m_Icosahedron[6], m_Icosahedron[10], 0, true);
+	RecursiveTriangle(m_Icosahedron[2], m_Icosahedron[4], m_Icosahedron[11], 0, true);
 }
 
-void Planet::RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level)
+TriNext Planet::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, int level, bool frustumCull)
 {
-	//check if triangle in view
-	bool visible = true;
-	if (visible)
+	glm::vec3 center = glm::vec3(m_ToWorld * glm::vec4((a + b + c) / 3.f, 0));
+	//Perform backface culling
+	float dotNV = glm::dot(glm::normalize(center), glm::normalize(center - m_CamPos));
+	if (dotNV >= 0.5f)
 	{
-		//check if subdivision is needed based on camera distance
-		bool subdivide = level < m_MaxLevel;
-		if (subdivide)
+		return TriNext::CULL;
+	}
+	//Perform Frustum culling
+
+	//convert frustum to object space?
+	if (frustumCull)
+	{
+		auto intersect = m_pFrustum->ContainsTriangle(a, b, c);
+		if (intersect == VolumeTri::OUTSIDE) return TriNext::CULL;
+		if (intersect == VolumeTri::CONTAINS)//stop frustum culling -> all children are also inside the frustum
 		{
-			//find midpoints
-			glm::vec3 A = b + ((c - b)*0.5f);
-			glm::vec3 B = c + ((a - c)*0.5f);
-			glm::vec3 C = a + ((b - a)*0.5f);
-			//make the distance from center larger according to planet radius
-			A *= m_Radius / glm::length(A);
-			B *= m_Radius / glm::length(B);
-			C *= m_Radius / glm::length(C);
-			//Make 4 new triangles
-			short nLevel = level + 1;
-			RecursiveTriangle(a, B, C, nLevel);
-			RecursiveTriangle(A, b, C, nLevel);
-			RecursiveTriangle(A, B, c, nLevel);
-			RecursiveTriangle(A, B, C, nLevel);
+			//check if new splits are allowed
+			if (level >= m_MaxLevel)return TriNext::LEAF;
+			//split according to distance
+			float dist = glm::length(center - m_CamPos);
+			if (dist*level < 5.f)return TriNext::SPLIT;
+			return TriNext::LEAF;
 		}
-		else //put the triangle in the buffer
-		{
-			m_Positions.push_back(a);
-			m_Positions.push_back(b);
-			m_Positions.push_back(c);
-		}
+	}
+	//check if new splits are allowed
+	if (level >= m_MaxLevel)return TriNext::LEAF;
+	//split according to distance
+	float dist = glm::length(center - m_CamPos);
+	if (dist*level < 5.f)return TriNext::SPLITCULL;
+	return TriNext::LEAF;
+}
+void Planet::RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int level, bool frustumCull)
+{
+	TriNext next = SplitHeuristic(a, b, c, level, frustumCull);
+	if (next == CULL) return;
+	//check if subdivision is needed based on camera distance
+	else if (next == SPLIT || next==SPLITCULL)
+	{
+		//find midpoints
+		glm::vec3 A = b + ((c - b)*0.5f);
+		glm::vec3 B = c + ((a - c)*0.5f);
+		glm::vec3 C = a + ((b - a)*0.5f);
+		//make the distance from center larger according to planet radius
+		A *= m_Radius / glm::length(A);
+		B *= m_Radius / glm::length(B);
+		C *= m_Radius / glm::length(C);
+		//Make 4 new triangles
+		short nLevel = level + 1;
+		RecursiveTriangle(a, B, C, nLevel, next==SPLITCULL);
+		RecursiveTriangle(A, b, C, nLevel, next == SPLITCULL);
+		RecursiveTriangle(A, B, c, nLevel, next == SPLITCULL);
+		RecursiveTriangle(A, B, C, nLevel, next == SPLITCULL);
+	}
+	else //put the triangle in the buffer
+	{
+		m_Positions.push_back(a);
+		m_Positions.push_back(b);
+		m_Positions.push_back(c);
 	}
 }
 
@@ -214,6 +263,13 @@ void Planet::DrawWire()
 
 	//unbind vertex array
 	glBindVertexArray(0);
+
+	//draw the frustum if it is locked
+	if (m_LockFrustum)
+	{
+		m_pFrustum->SetShaderAccessors(m_uModelWire, m_uViewProjWire);
+		m_pFrustum->Draw();
+	}
 }
 
 Planet::~Planet()
@@ -222,6 +278,7 @@ Planet::~Planet()
 	SafeDelete(m_pTriangleShader);
 	glUseProgram(m_pWireShader->GetProgram());
 	SafeDelete(m_pWireShader);
+	SafeDelete(m_pFrustum);
 	SafeDelete(m_pTransform);
 
 	glDeleteVertexArrays(1, &m_VAO);

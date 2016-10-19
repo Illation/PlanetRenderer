@@ -138,6 +138,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Planet.cpp" />
@@ -154,6 +155,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Scene.h" />

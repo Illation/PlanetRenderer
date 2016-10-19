@@ -1,3 +1,6 @@
 PlanetFramework/Debug
+PlanetFramework/Release
 *.ipch
+*.db
 PlanetFramework/.vs
+PlanetFramework/PlanetFramework.VC.db

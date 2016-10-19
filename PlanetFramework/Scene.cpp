@@ -22,6 +22,8 @@ void Scene::Init()
 
 	m_pPlanet->Init();
 
+	m_pCamera->SetPlanet(m_pPlanet);
+
 	m_pConObj->pTime->Start();
 }
 
