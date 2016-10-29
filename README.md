@@ -9,17 +9,15 @@ I regularly post updates about this project on my blog: http://robert-lindner.co
 There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum.
 
 ![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/SUInEza.jpg)
-![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/dC9CQMP.jpg)
-![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/v9xjw0m.jpg)
-![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/D45nHv8.jpg)
 ![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/tjOinep.jpg)
 
-[Imgur Gallery](http://imgur.com/gallery/58LZH)
+### Demo Video
+[![Link](https://i.ytimg.com/vi/Dvl5ecx_6Dw/maxresdefault.jpg)](https://www.youtube.com/watch?v=Dvl5ecx_6Dw)
 
 ####Framework
 A lot of the code for the framework is copied from my openGL framework, but since I want a barebones techdemo as a result in order to keep all the code relevant, I did not code this in the framework itself.
 
-Currently there is context managment, time, input managment, window settings, opengl and sdl initialization, shaders, camera and transforms.
+Currently there is context managment, time, input managment, window settings, opengl and sdl initialization, shaders, camera, transforms, textures and text rendering.
 
 ####Libraries
 Libraries used: SDL2, GLM, OpenGL, DevIL
