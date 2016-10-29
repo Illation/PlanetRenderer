@@ -8,6 +8,7 @@ I regularly post updates about this project on my blog: http://robert-lindner.co
 ####Terrain
 There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum.
 
+![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/SUInEza.jpg)
 ![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/dC9CQMP.jpg)
 ![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/v9xjw0m.jpg)
 ![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/D45nHv8.jpg)
