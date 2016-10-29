@@ -44,7 +44,7 @@ private:
 	float m_Longitude = 0;
 	float m_RotationSpeed = 0.5f;
 	Transform *m_pTransform = nullptr;
-	bool m_Moved = false;
+	bool m_Moved = true;
 
 	float m_AltitudeMult = 6371.f;
 

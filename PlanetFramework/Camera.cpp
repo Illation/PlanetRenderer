@@ -70,7 +70,7 @@ void Camera::Update()
 	//std::cout << "Altitude (earth): " << (dist - m_pPlanet->GetRadius()) * (6371.f / m_pPlanet->GetRadius()) << std::endl;
 
 
-	if(m_Moved)m_pTransform->SetPosition(sin(m_Longitude)*dist, 0, -cos(m_Longitude)*dist);
+	m_pTransform->SetPosition(sin(m_Longitude)*dist, 0, -cos(m_Longitude)*dist);
 
 	m_pTransform->UpdateTransforms();
 

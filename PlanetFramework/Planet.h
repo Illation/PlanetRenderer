@@ -38,7 +38,7 @@ private:
 	float m_Radius = 1737.1f;
 	int m_MaxLevel = 15;
 	float m_SplitDist = 3*sqrtf(m_Radius);
-	float m_AllowedTriPx = 30.f;
+	float m_AllowedTriPx = 60.f;
 
 	std::vector<float> m_TriLevelSizeLUT;
 	float m_AllowedScreenPerc;

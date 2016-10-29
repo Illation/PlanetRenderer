@@ -28,6 +28,8 @@ void Planet::Init()
 	float scale = m_Radius / glm::length(glm::vec2(ratio, 1.f));
 	ratio *= scale;
 
+	m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), glm::radians(270.f), glm::vec3(0.0f, 1.0f, 0.0f)));
+
 	//X plane
 	m_Icosahedron.push_back(glm::vec3(ratio, 0, -scale));		//rf 0
 	m_Icosahedron.push_back(glm::vec3(-ratio, 0, -scale));		//lf 1

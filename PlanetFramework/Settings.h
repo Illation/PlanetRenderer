@@ -15,7 +15,7 @@ public:
 	struct WindowSettings
 	{
 		WindowSettings() :
-			Fullscreen(false),
+			Fullscreen(true),
 			VSyncEnabled(false),
 			AspectRatio(Width / (float)Height),
 			Title("OpenGl Planet Renderer"),
