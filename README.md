@@ -21,4 +21,13 @@ A lot of the code for the framework is copied from my openGL framework, but sinc
 Currently there is context managment, time, input managment, window settings, opengl and sdl initialization, shaders, camera and transforms.
 
 ####Libraries
-Libraries used: SDL2, GLM, OpenGL - in the future also DevIL
+Libraries used: SDL2, GLM, OpenGL, DevIL
+
+Font files created with BMFont.
+
+####Building
+To build the project you need to define an environment variable or macro for visual studio to find the above mentioned libraries.
+The variable is called "S_LIBS", and the value would be something like "C:\Dev\StaticLibraries".
+That folder needs to contain the .lib files and the include folders of SDL2, GLM and DevIL.
+
+Alternativly you can modify the visual studio project include and library paths to suit your setup. You should obviously also be running on a computer that has the hardware and drivers for modern openGL.

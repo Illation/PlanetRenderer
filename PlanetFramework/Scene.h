@@ -4,6 +4,8 @@ class Time;
 class Camera;
 class ContextObjects;
 
+class SpriteFont;
+
 class Planet;
 
 class Scene
@@ -31,6 +33,8 @@ private:
 		WIREFRAME,
 		OVERLAY
 	} renderMode = OVERLAY;
+
+	SpriteFont* m_pDebugFont = nullptr;
 
 	//Planet tech
 	Planet *m_pPlanet;

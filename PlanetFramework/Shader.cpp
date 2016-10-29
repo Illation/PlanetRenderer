@@ -10,7 +10,7 @@ Shader::Shader(std::string filename, bool build)
 
 void Shader::Build()
 {
-	std::cout << "Compiling Shader: " << m_FileName << " . . . ";
+	std::cout << "Building Shader: " << m_FileName << " . . . ";
 
 	std::string vertSource;
 	std::string geoSource;
@@ -88,7 +88,7 @@ void Shader::Build()
 
 	//Compile
 	m_VertexShader = CompileShader(vertSource, GL_VERTEX_SHADER);
-	if (useGeo)m_GeometryShader = CompileShader(fragSource, GL_GEOMETRY_SHADER);
+	if (useGeo)m_GeometryShader = CompileShader(geoSource, GL_GEOMETRY_SHADER);
 	m_FragmentShader = CompileShader(fragSource, GL_FRAGMENT_SHADER);
 
 	//Combine Shaders
@@ -98,7 +98,18 @@ void Shader::Build()
 	glAttachShader(m_ShaderProgram, m_FragmentShader);
 	glBindFragDataLocation(m_ShaderProgram, 0, "outColor");
 	glLinkProgram(m_ShaderProgram);
-	std::cout << "  . . . SUCCESS!" << std::endl;
+
+	// Print linking errors if any
+	GLint status;
+	glGetProgramiv(m_ShaderProgram, GL_LINK_STATUS, &status);
+	if (!(status == GL_TRUE))
+	{
+		char buffer[512];
+		glGetProgramInfoLog(m_ShaderProgram, 512, NULL, buffer);
+		std::cout << "[ERROR] Shader>Build: Program linking failed\n" << buffer << std::endl;
+		std::cout << "  . . . FAILED!" << std::endl;
+	}
+	else std::cout << "  . . . SUCCESS!" << std::endl;
 
 	//Delete those shaders
 	glDeleteShader(m_VertexShader);
@@ -146,7 +157,7 @@ GLuint Shader::CompileShader(const std::string &shaderSourceStr, GLenum type)
 Shader::~Shader()
 {
 	glDeleteProgram(m_ShaderProgram);
-	glDeleteShader(m_FragmentShader);
-	if (m_UseGS)glDeleteShader(m_GeometryShader);
-	glDeleteShader(m_VertexShader);
+	//glDeleteShader(m_FragmentShader);
+	//if (m_UseGS)glDeleteShader(m_GeometryShader);
+	//glDeleteShader(m_VertexShader);
 }

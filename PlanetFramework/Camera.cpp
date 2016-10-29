@@ -6,8 +6,8 @@
 
 Camera::Camera() :
 	m_FOV(45),
-	m_NearPlane(0.01f),
-	m_FarPlane(30.0f),
+	m_NearPlane(1),
+	m_FarPlane(200000),
 	m_Size(25.0f),
 	m_PerspectiveProjection(true)
 {
@@ -67,6 +67,7 @@ void Camera::Update()
 	m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), deltaLong, glm::vec3(0, 1, 0)));
 
 	float dist = m_pPlanet->GetRadius() + m_Altitude;
+	//std::cout << "Altitude (earth): " << (dist - m_pPlanet->GetRadius()) * (6371.f / m_pPlanet->GetRadius()) << std::endl;
 
 
 	if(m_Moved)m_pTransform->SetPosition(sin(m_Longitude)*dist, 0, -cos(m_Longitude)*dist);

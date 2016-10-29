@@ -2,6 +2,10 @@
 
 #include "Scene.h"
 
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
+
 //**************************************
 //Functions for debugging
 //**************************************
@@ -10,6 +14,7 @@ static void sdl_die(const char * message)
 	fprintf(stderr, "%s: %s\n", message, SDL_GetError());
 	exit(2);
 }
+#if defined(DEBUG) | defined(_DEBUG)
 static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	(void)source; (void)type; (void)id;
@@ -23,6 +28,7 @@ static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint i
 	}
 	std::cout << std::endl;
 }
+#endif
 void SetDebuggingOptions()
 {
 	//notify user if heap is corrupt
@@ -34,7 +40,7 @@ void SetDebuggingOptions()
 
 	typedef HRESULT(__stdcall *fPtr)(const IID&, void**);
 
-	//_CrtSetBreakAlloc(249);
+	//_CrtSetBreakAlloc(251);
 #endif
 }
 
@@ -49,14 +55,8 @@ int main(int argc, char *argv[])
 	//Catch memory leaks etc
 	SetDebuggingOptions();
 
-	//Initialize SDL OpenGL and GLAD
-	//*******************************
-
-	//SDL init
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		sdl_die("Couldn't initialize SDL");
-	atexit(SDL_Quit);
-	SDL_GL_LoadLibrary(NULL);
+	//Initialize SDL, OpenGL, DevIL and GLAD
+	//**************************************
 
 	//request opengl context
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
@@ -67,6 +67,12 @@ int main(int argc, char *argv[])
 	//Buffers
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+	//SDL init
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		sdl_die("Couldn't initialize SDL");
+	atexit(SDL_Quit);
+	SDL_GL_LoadLibrary(NULL);
 
 	// Request a debug context.
 	#if defined(DEBUG) | defined(_DEBUG)
@@ -90,6 +96,11 @@ int main(int argc, char *argv[])
 	if (context == NULL)sdl_die("Failed to create OpenGL context");
 	// Use v-sync
 	SDL_GL_SetSwapInterval(pSettings->Window.VSyncEnabled);
+
+	//Initialize DevIL
+
+	ilInit();
+	iluInit();
 	
 	//Bind OpenGL
 	std::cout << "OpenGL loaded" << std::endl << std::endl;
@@ -139,7 +150,7 @@ int main(int argc, char *argv[])
 		//******
 
 		//Clear the previous content
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
 

@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <istream>
 #include <vector>
 #pragma endregion stl
 

@@ -3,10 +3,16 @@
 
 #include "Camera.h"
 #include "Planet.h"
+#include "SpriteFont.h"
+#include "TextRenderer.h"
+
+#include <sstream>
+#include <iomanip>
 
 Scene::Scene()
 {
 	m_pPlanet = new Planet();
+	m_pDebugFont = new SpriteFont();
 }
 
 void Scene::Init()
@@ -19,6 +25,9 @@ void Scene::Init()
 	m_pConObj->pCamera = m_pCamera;
 	m_pConObj->pScene = this;
 	CONTEXT->SetContext(m_pConObj);
+
+	TextRenderer::GetInstance()->Init();
+	m_pDebugFont->Load("./Fonts/Consolas_32.fnt");
 
 	m_pPlanet->Init();
 
@@ -53,16 +62,26 @@ void Scene::Update()
 
 void Scene::Draw()
 {
+	TextRenderer::GetInstance()->SetFont(m_pDebugFont);
+	TextRenderer::GetInstance()->SetColor(glm::vec4(1, 0.3f, 0.3f, 1));
+	TextRenderer::GetInstance()->DrawText("FPS: " + std::to_string((int)TIME->FPS()), glm::vec2(20, 20));
+	TextRenderer::GetInstance()->SetColor(glm::vec4(1, 1, 1, 1));
+	TextRenderer::GetInstance()->DrawText("vertex count: " + std::to_string(m_pPlanet->GetVertexCount()), glm::vec2(20, 60));
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(3) << m_pCamera->GetAltitude();
+	TextRenderer::GetInstance()->DrawText("altitude: " + ss.str() + "km", glm::vec2(20, 100));
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDepthRange(0.00001, 1.0);
 	if (renderMode == SOLID || renderMode == OVERLAY)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDepthRange(0.00001, 1.0);
 		m_pPlanet->Draw();
 	}
+	TextRenderer::GetInstance()->Draw();
+	glDepthRange(0.0, 0.99999);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (renderMode == WIREFRAME || renderMode == OVERLAY)
 	{
-		glDepthRange(0.0, 0.99999);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		m_pPlanet->DrawWire();
 	}
 }
@@ -70,6 +89,9 @@ void Scene::Draw()
 Scene::~Scene()
 {
 	SafeDelete(m_pPlanet);
+
+	SafeDelete(m_pDebugFont);
+	TextRenderer::GetInstance()->DestroyInstance();
 
 	SafeDelete(m_pTime);
 	SafeDelete(m_pCamera);

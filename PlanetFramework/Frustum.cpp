@@ -30,7 +30,10 @@ void Frustum::SetCullTransform(glm::mat4 objectWorld)
 
 void Frustum::SetToCamera(Camera* pCamera)
 {
-	m_pTransform = pCamera->GetTransform();
+	m_Position = pCamera->GetTransform()->GetPosition();
+	m_Forward = pCamera->GetTransform()->GetForward();
+	m_Up = pCamera->GetTransform()->GetUp();
+	m_Right = pCamera->GetTransform()->GetRight();
 	m_NearPlane = pCamera->GetNearPlane();
 	m_FarPlane = pCamera->GetFarPlane();
 	m_FOV = pCamera->GetFOV();
@@ -38,10 +41,6 @@ void Frustum::SetToCamera(Camera* pCamera)
 
 void Frustum::Update()
 {
-	//get camera transform vectors
-	glm::vec3 up = m_pTransform->GetUp();
-	glm::vec3 right = m_pTransform->GetRight();
-
 	//calculate generalized relative width and aspect ratio
 	float normHalfWidth = tan(glm::radians(m_FOV));
 	float aspectRatio = (float)WINDOW.Width / (float)WINDOW.Height;
@@ -53,27 +52,28 @@ void Frustum::Update()
 	float farHH = farHW / aspectRatio;
 
 	//calculate near and far plane centers
-	auto nCenter = m_pTransform->GetPosition()
-		+ m_pTransform->GetForward()*m_NearPlane;
-	auto fCenter = m_pTransform->GetPosition()
-		+ m_pTransform->GetForward()*m_FarPlane*0.5f;
+	auto nCenter = m_Position + m_Forward*m_NearPlane;
+	auto fCenter = m_Position + m_Forward*m_FarPlane*0.5f;
 
 	//construct corners of the near plane in the culled objects world space
-	auto na = glm::vec3(m_CullInverse*glm::vec4(nCenter + up*nearHH - right*nearHW, 0));
-	auto nb = glm::vec3(m_CullInverse*glm::vec4(nCenter + up*nearHH + right*nearHW, 0));
-	auto nc = glm::vec3(m_CullInverse*glm::vec4(nCenter - up*nearHH - right*nearHW, 0));
-	auto nd = glm::vec3(m_CullInverse*glm::vec4(nCenter - up*nearHH + right*nearHW, 0));
+	auto na = glm::vec3(m_CullInverse*glm::vec4(nCenter + m_Up*nearHH - m_Right*nearHW, 0));
+	auto nb = glm::vec3(m_CullInverse*glm::vec4(nCenter + m_Up*nearHH + m_Right*nearHW, 0));
+	auto nc = glm::vec3(m_CullInverse*glm::vec4(nCenter - m_Up*nearHH - m_Right*nearHW, 0));
+	auto nd = glm::vec3(m_CullInverse*glm::vec4(nCenter - m_Up*nearHH + m_Right*nearHW, 0));
 	//construct corners of the far plane
-	auto fa = glm::vec3(m_CullInverse*glm::vec4(fCenter + up*farHH - right*farHW, 0));
-	auto fb = glm::vec3(m_CullInverse*glm::vec4(fCenter + up*farHH + right*farHW, 0));
-	auto fc = glm::vec3(m_CullInverse*glm::vec4(fCenter - up*farHH - right*farHW, 0));
-	auto fd = glm::vec3(m_CullInverse*glm::vec4(fCenter - up*farHH + right*farHW, 0));
+	auto fa = glm::vec3(m_CullInverse*glm::vec4(fCenter + m_Up*farHH - m_Right*farHW, 0));
+	auto fb = glm::vec3(m_CullInverse*glm::vec4(fCenter + m_Up*farHH + m_Right*farHW, 0));
+	auto fc = glm::vec3(m_CullInverse*glm::vec4(fCenter - m_Up*farHH - m_Right*farHW, 0));
+	auto fd = glm::vec3(m_CullInverse*glm::vec4(fCenter - m_Up*farHH + m_Right*farHW, 0));
+
+	m_PositionObject = glm::vec3(m_CullInverse*glm::vec4(m_Position, 0));
+	m_RadInvFOV = 1 / glm::radians(m_FOV);
 
 	//construct planes
 	m_Planes.clear();
 	//winding in an outside perspective so the cross product creates normals pointing inward
 	m_Planes.push_back(Plane(na, nb, nc));//Near
-	m_Planes.push_back(Plane(fb, fa, fd));//Far Maybe skip this step? most polys further away should already be low res
+	//m_Planes.push_back(Plane(fb, fa, fd));//Far Maybe skip this step? most polys further away should already be low res
 	m_Planes.push_back(Plane(fa, na, fc));//Left
 	m_Planes.push_back(Plane(nb, fb, nd));//Right
 	m_Planes.push_back(Plane(fa, fb, na));//Top

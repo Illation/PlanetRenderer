@@ -3,6 +3,7 @@
 class Shader;
 class Transform;
 class Frustum;
+class Texture;
 
 enum TriNext
 {
@@ -24,26 +25,32 @@ public:
 	void DrawWire();
 
 	float GetRadius(){ return m_Radius; }
+	int GetVertexCount() { return m_Positions.size(); }
 
 private:
 	//Member functions
 	void GenerateGeometry();
-	TriNext SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, int level, bool frustumCull);
-	void RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int level, bool frustumCull);
-
-	glm::mat4 m_ToWorld;
-	glm::vec3 m_CamForward;
-	glm::vec3 m_CamPos;
+	bool DistanceExceeds(short level, glm::vec3& center);
+	TriNext SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, short level, bool frustumCull);
+	void RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level, bool frustumCull);
 
 	//DataMembers
-	float m_Radius = 1;
-	int m_MaxLevel = 0;
+	float m_Radius = 1737.1f;
+	int m_MaxLevel = 15;
+	float m_SplitDist = 3*sqrtf(m_Radius);
+	float m_AllowedTriPx = 30.f;
+
+	std::vector<float> m_TriLevelSizeLUT;
+	float m_AllowedScreenPerc;
+	std::vector<float> m_TriLevelDotLUT;
 
 	Transform *m_pTransform = nullptr;
 	bool m_Rotate = false;
 
 	Frustum* m_pFrustum = nullptr;
 	bool m_LockFrustum = false;
+
+	Texture* m_pDiffuse = nullptr;
 
 	std::vector<glm::vec3> m_Icosahedron;
 

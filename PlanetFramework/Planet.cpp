@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Frustum.h"
+#include "Texture.h"
 
 Planet::Planet()
 {
@@ -16,6 +17,8 @@ Planet::Planet()
 	
 	m_pTriangleShader = new Shader("./Shaders/triangle.glsl");
 	m_pWireShader = new Shader("./Shaders/wire.glsl");
+
+	m_pDiffuse = new Texture("./Textures/moon8k.jpg");
 }
 
 void Planet::Init()
@@ -52,6 +55,10 @@ void Planet::Init()
 	m_uModel = glGetUniformLocation(m_pTriangleShader->GetProgram(), "model");
 	m_uViewProj = glGetUniformLocation(m_pTriangleShader->GetProgram(), "viewProj");
 
+	//LoadTextures
+	m_pDiffuse->Load();
+	glUniform1i(glGetUniformLocation(m_pTriangleShader->GetProgram(), "texDiffuse"), 0);
+
 	//Generate buffers and arrays
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
@@ -65,7 +72,7 @@ void Planet::Init()
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
 	//set data and attributes
-	glBufferData(GL_ARRAY_BUFFER, m_Positions.size() * sizeof(glm::vec3), m_Positions.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_Positions.size() * sizeof(glm::vec3), m_Positions.data(), GL_DYNAMIC_DRAW);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(GLuint), m_Indices.data(), GL_STATIC_DRAW);
 	
 	//input layout
@@ -85,25 +92,13 @@ void Planet::Update()
 {
 	m_pTransform->SetPosition(0, 0, 0);
 	if (INPUT->IsKeyboardKeyPressed('r'))m_Rotate = !m_Rotate;
-	if(m_Rotate && !m_LockFrustum)m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), -(GLfloat)TIME->DeltaTime() * 0.1f, glm::vec3(0.5f, 1.0f, 0.0f)));
+	if(m_Rotate)m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), -(GLfloat)TIME->DeltaTime() * 0.1f, glm::vec3(0.0f, 1.0f, 0.0f)));
 
 	m_pTransform->UpdateTransforms();
-
-	//Frustum update
-	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_SPACE))m_LockFrustum = !m_LockFrustum;
-	if (!m_LockFrustum)
-	{
-		m_pFrustum->SetCullTransform(m_pTransform->GetTransform());
-		m_pFrustum->SetToCamera(CAMERA);
-		m_pFrustum->Update();
-		m_CamForward = CAMERA->GetTransform()->GetForward();
-		m_CamPos = CAMERA->GetTransform()->GetPosition();
-	}
-	m_ToWorld = m_pTransform->GetTransform();
-
-
 	//Change Planet
 	//***************
+
+	//Set Max subd level
 	bool geometryChanged = true;
 	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_UP))
 	{
@@ -116,6 +111,13 @@ void Planet::Update()
 		geometryChanged = true;
 	}
 	if (CAMERA->HasMoved())geometryChanged = true;
+
+	//Frustum update
+	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_SPACE))m_LockFrustum = !m_LockFrustum;
+	m_pFrustum->SetCullTransform(m_pTransform->GetTransform());
+	if (!m_LockFrustum) m_pFrustum->SetToCamera(CAMERA);
+	m_pFrustum->Update();
+
 	if (geometryChanged)
 	{
 		//Change the actual vertex positions
@@ -125,19 +127,33 @@ void Planet::Update()
 
 		//Send the vertex buffer again
 		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-		glBufferData(GL_ARRAY_BUFFER, m_Positions.size() * sizeof(glm::vec3), m_Positions.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, m_Positions.size() * sizeof(glm::vec3), m_Positions.data(), GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		//Done Modifying
 		glBindVertexArray(0);
 	}
-	std::cout << "FPS: " << TIME->FPS() << " - Vertices: " << m_Positions.size() <<std::endl;
+	//std::cout << "FPS: " << TIME->FPS() << " - Vertices: " << m_Positions.size() <<std::endl;
 	//std::cout << std::endl << std::endl << std::endl;
 }
 
 void Planet::GenerateGeometry()
 {
 	m_Positions.clear();
+
+	//Calculate Look up tables
+	m_TriLevelSizeLUT.clear();
+	m_TriLevelSizeLUT.push_back(glm::length(m_Icosahedron[3] - m_Icosahedron[1]));
+	m_TriLevelDotLUT.clear();
+	m_TriLevelDotLUT.push_back(0.5f);
+	float angle = acosf(m_TriLevelDotLUT[0]);
+	for (int i = 1; i < m_MaxLevel; i++)
+	{
+		m_TriLevelSizeLUT.push_back(m_TriLevelSizeLUT[i-1]*0.5f);
+		angle *= 0.5f;
+		m_TriLevelDotLUT.push_back(sin(angle));
+	}
+	m_AllowedScreenPerc = m_AllowedTriPx / WINDOW.Width;
 
 	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[8], 0, true);
 	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[9], 0, true);
@@ -165,18 +181,25 @@ void Planet::GenerateGeometry()
 	RecursiveTriangle(m_Icosahedron[2], m_Icosahedron[4], m_Icosahedron[11], 0, true);
 }
 
-TriNext Planet::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, int level, bool frustumCull)
+bool Planet::DistanceExceeds(short level, glm::vec3 &center)
 {
-	glm::vec3 center = glm::vec3(m_ToWorld * glm::vec4((a + b + c) / 3.f, 0));
+	//if (dist*level < m_SplitDist);
+	float dist = glm::length(center - m_pFrustum->GetPositionOS());
+	float sizeL = m_TriLevelSizeLUT[level];
+	float screenPerc = atanf(sizeL / dist) * m_pFrustum->GetRadInvFOV();
+	return screenPerc > m_AllowedScreenPerc;
+}
+TriNext Planet::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, short level, bool frustumCull)
+{
+	glm::vec3 center = (a + b + c) / 3.f;
 	//Perform backface culling
-	float dotNV = glm::dot(glm::normalize(center), glm::normalize(center - m_CamPos));
-	if (dotNV >= 0.5f)
+	float dotNV = glm::dot(glm::normalize(center), glm::normalize(center - m_pFrustum->GetPositionOS()));
+	if (dotNV >= m_TriLevelDotLUT[level])
 	{
 		return TriNext::CULL;
 	}
-	//Perform Frustum culling
 
-	//convert frustum to object space?
+	//Perform Frustum culling
 	if (frustumCull)
 	{
 		auto intersect = m_pFrustum->ContainsTriangle(a, b, c);
@@ -186,19 +209,17 @@ TriNext Planet::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, int lev
 			//check if new splits are allowed
 			if (level >= m_MaxLevel)return TriNext::LEAF;
 			//split according to distance
-			float dist = glm::length(center - m_CamPos);
-			if (dist*level < 5.f)return TriNext::SPLIT;
+			if (DistanceExceeds(level, center))return TriNext::SPLIT;
 			return TriNext::LEAF;
 		}
 	}
 	//check if new splits are allowed
 	if (level >= m_MaxLevel)return TriNext::LEAF;
 	//split according to distance
-	float dist = glm::length(center - m_CamPos);
-	if (dist*level < 5.f)return TriNext::SPLITCULL;
+	if (DistanceExceeds(level, center))return TriNext::SPLITCULL;
 	return TriNext::LEAF;
 }
-void Planet::RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int level, bool frustumCull)
+void Planet::RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level, bool frustumCull)
 {
 	TriNext next = SplitHeuristic(a, b, c, level, frustumCull);
 	if (next == CULL) return;
@@ -236,6 +257,9 @@ void Planet::Draw()
 	// Pass transformations to the shader
 	glUniformMatrix4fv(m_uModel, 1, GL_FALSE, glm::value_ptr(m_pTransform->GetTransform()));
 	glUniformMatrix4fv(m_uViewProj, 1, GL_FALSE, glm::value_ptr(CAMERA->GetViewProj()));
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_pDiffuse->GetHandle());
 
 	//Bind Object vertex array
 	glBindVertexArray(m_VAO);
@@ -280,6 +304,7 @@ Planet::~Planet()
 	SafeDelete(m_pWireShader);
 	SafeDelete(m_pFrustum);
 	SafeDelete(m_pTransform);
+	SafeDelete(m_pDiffuse);
 
 	glDeleteVertexArrays(1, &m_VAO);
 	glDeleteBuffers(1, &m_VBO);

@@ -33,16 +33,20 @@ public:
 	bool HasMoved() { return m_Moved; }
 	Transform* GetTransform() { return m_pTransform; }
 
+	float GetAltitude() { return m_Altitude; }
+
 private:
 	//Movement stuff
 
 	Planet *m_pPlanet = nullptr;
-	float m_Altitude = 5;
+	float m_Altitude = 10000;
 	float m_Latitude = 0;
 	float m_Longitude = 0;
 	float m_RotationSpeed = 0.5f;
 	Transform *m_pTransform = nullptr;
 	bool m_Moved = false;
+
+	float m_AltitudeMult = 6371.f;
 
 	//Camera projection
 	glm::mat4 m_View, 

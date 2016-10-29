@@ -7,21 +7,26 @@
 	uniform mat4 viewProj;
 	
 	out vec3 Position;
+	out vec3 Tex3;
 	out vec3 Normal;
 	
 	void main()
 	{
 		Normal = normalize((model*vec4(position, 1.0f)).xyz);
 		gl_Position = viewProj * model * vec4(position, 1.0f);
+		Tex3 = normalize(position);
 	}
 </VERTEX>
 <FRAGMENT>
 	#version 330 core
 	
 	in vec3 Position;
+	in vec3 Tex3;
 	in vec3 Normal;
 	
-	uniform vec3 lightDir = vec3(-1, -1, 1);
+	uniform sampler2D texDiffuse;
+	
+	uniform vec3 lightDir = vec3(-1, -0.3, 1);
 	
 	uniform vec3 diffuse = vec3(1.0f, 0.5f, 0.2f);
 	uniform vec3 ambient = vec3(0.05f, 0.05f, 0.08f);
@@ -40,7 +45,15 @@
 	}
 	void main()
 	{
-		vec3 lit = DirLighting(diffuse, Normal);
-		outColor = vec4(lit+ambient, 1.0f);
+		vec3 tc3 = normalize(Tex3);
+		vec2 uv;
+		uv.x = atan( tc3.z, tc3.x );
+		uv.y = acos( tc3.y );
+		uv /= vec2( 2.0f * 3.14159265359f, 3.14159265359f );
+		vec3 dif = texture(texDiffuse, uv).rgb;
+	
+		vec3 lit = DirLighting(dif, Normal);
+		lit*=0.8f;
+		outColor = vec4(lit+ambient*dif, 1.0f);
 	} 
 </FRAGMENT>
