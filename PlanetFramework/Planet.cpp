@@ -135,14 +135,10 @@ void Planet::Update()
 		//Done Modifying
 		glBindVertexArray(0);
 	}
-	//std::cout << "FPS: " << TIME->FPS() << " - Vertices: " << m_Positions.size() <<std::endl;
-	//std::cout << std::endl << std::endl << std::endl;
 }
 
-void Planet::GenerateGeometry()
+void Planet::Precalculate()
 {
-	m_Positions.clear();
-
 	//Calculate Look up tables
 	m_TriLevelSizeLUT.clear();
 	m_TriLevelSizeLUT.push_back(glm::length(m_Icosahedron[3] - m_Icosahedron[1]));
@@ -151,11 +147,37 @@ void Planet::GenerateGeometry()
 	float angle = acosf(m_TriLevelDotLUT[0]);
 	for (int i = 1; i < m_MaxLevel; i++)
 	{
-		m_TriLevelSizeLUT.push_back(m_TriLevelSizeLUT[i-1]*0.5f);
+		m_TriLevelSizeLUT.push_back(m_TriLevelSizeLUT[i - 1] * 0.5f);
 		angle *= 0.5f;
 		m_TriLevelDotLUT.push_back(sin(angle));
 	}
+
+	//height multipliers
+	m_HeightMultLUT.clear();
+	glm::vec3 a = m_Icosahedron[1];
+	glm::vec3 b = m_Icosahedron[3];
+	glm::vec3 c = m_Icosahedron[8];
+	glm::vec3 center = (a + b + c) / 3.f;
+	center *= m_Radius / glm::length(center);//+maxHeight
+	m_HeightMultLUT.push_back(1/glm::dot(glm::normalize(a), glm::normalize(center)));
+	for (int i = 1; i < m_MaxLevel; i++)
+	{
+		glm::vec3 A = b + ((c - b)*0.5f);
+		glm::vec3 B = c + ((a - c)*0.5f);
+		c = a + ((b - a)*0.5f);
+		a = A*m_Radius / glm::length(A);
+		b = B*m_Radius / glm::length(B);
+		c *= m_Radius / glm::length(c);
+		m_HeightMultLUT.push_back(1/glm::dot(glm::normalize(a), glm::normalize(center)));
+	}
+
 	m_AllowedScreenPerc = m_AllowedTriPx / WINDOW.Width;
+}
+
+void Planet::GenerateGeometry()
+{
+	Precalculate();
+	m_Positions.clear();
 
 	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[8], 0, true);
 	RecursiveTriangle(m_Icosahedron[1], m_Icosahedron[3], m_Icosahedron[9], 0, true);
@@ -204,7 +226,8 @@ TriNext Planet::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, short l
 	//Perform Frustum culling
 	if (frustumCull)
 	{
-		auto intersect = m_pFrustum->ContainsTriangle(a, b, c);
+		auto intersect = m_pFrustum->ContainsTriVolume(a, b, c, m_HeightMultLUT[level]);
+		//auto intersect = m_pFrustum->ContainsTriangle(a, b, c);
 		if (intersect == VolumeTri::OUTSIDE) return TriNext::CULL;
 		if (intersect == VolumeTri::CONTAINS)//stop frustum culling -> all children are also inside the frustum
 		{
@@ -291,7 +314,7 @@ void Planet::DrawWire()
 	glBindVertexArray(0);
 
 	//draw the frustum if it is locked
-	if (m_LockFrustum)
+	if (true||m_LockFrustum)
 	{
 		m_pFrustum->SetShaderAccessors(m_uModelWire, m_uViewProjWire);
 		m_pFrustum->Draw();

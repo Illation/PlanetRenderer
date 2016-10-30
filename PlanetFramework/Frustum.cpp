@@ -42,7 +42,7 @@ void Frustum::SetToCamera(Camera* pCamera)
 void Frustum::Update()
 {
 	//calculate generalized relative width and aspect ratio
-	float normHalfWidth = tan(glm::radians(m_FOV));
+	float normHalfWidth = tan(glm::radians(m_FOV))/2;
 	float aspectRatio = (float)WINDOW.Width / (float)WINDOW.Height;
 
 	//calculate width and height for near and far plane
@@ -120,6 +120,30 @@ VolumeTri Frustum::ContainsTriangle(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c)
 		if (glm::dot(plane.n, c - plane.d) < 0)rejects++;
 		// if all three are outside a plane the triangle is outside the frustrum
 		if (rejects >= 3)return VolumeTri::OUTSIDE;
+		// if at least one is outside the triangle intersects at least one plane
+		else if (rejects > 0)ret = VolumeTri::INTERSECT;
+	}
+	return ret;
+}
+//same as above but with a volume generated above the triangle
+VolumeTri Frustum::ContainsTriVolume(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, float height)
+{
+	VolumeTri ret = VolumeTri::CONTAINS;
+	for (auto plane : m_Planes)
+	{
+		char rejects = 0;
+		if (glm::dot(plane.n, a - plane.d) < 0)rejects++;
+		if (glm::dot(plane.n, b - plane.d) < 0)rejects++;
+		if (glm::dot(plane.n, c - plane.d) < 0)rejects++;
+		// if all three are outside a plane the triangle is outside the frustrum
+		if (rejects >= 3)
+		{
+			if (glm::dot(plane.n, (a*height) - plane.d) < 0)rejects++;
+			if (glm::dot(plane.n, (b*height) - plane.d) < 0)rejects++;
+			if (glm::dot(plane.n, (c*height) - plane.d) < 0)rejects++;
+			if (rejects >= 6)return VolumeTri::OUTSIDE;
+			else ret = VolumeTri::INTERSECT;
+		}
 		// if at least one is outside the triangle intersects at least one plane
 		else if (rejects > 0)ret = VolumeTri::INTERSECT;
 	}

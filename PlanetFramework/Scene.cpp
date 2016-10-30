@@ -70,6 +70,7 @@ void Scene::Draw()
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(3) << m_pCamera->GetAltitude();
 	TextRenderer::GetInstance()->DrawText("altitude: " + ss.str() + "km", glm::vec2(20, 100));
+	TextRenderer::GetInstance()->DrawText("FOV: " + std::to_string(m_pCamera->GetFOV()), glm::vec2(20, 140));
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDepthRange(0.00001, 1.0);
@@ -77,13 +78,19 @@ void Scene::Draw()
 	{
 		m_pPlanet->Draw();
 	}
-	TextRenderer::GetInstance()->Draw();
+
+	//Debug Drawing
 	glDepthRange(0.0, 0.99999);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (renderMode == WIREFRAME || renderMode == OVERLAY)
 	{
 		m_pPlanet->DrawWire();
 	}
+
+	//Draw text
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDepthRange(0.00001, 1.0);
+	TextRenderer::GetInstance()->Draw();
 }
 
 Scene::~Scene()

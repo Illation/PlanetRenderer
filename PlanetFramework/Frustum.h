@@ -52,6 +52,7 @@ public:
 
 	bool Contains(glm::vec3 p);
 	VolumeTri ContainsTriangle(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c);
+	VolumeTri ContainsTriVolume(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, float height);
 
 	const glm::vec3 &GetPositionOS() { return m_PositionObject; }
 	const float GetFOV() { return m_FOV; }
