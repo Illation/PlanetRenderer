@@ -157,6 +157,7 @@ int main(int argc, char *argv[])
 		//Let scene draw. 
 		//custom swapchain with framebuffers will be handled here
 		pScene->Draw();
+		pScene->PostDraw();
 
 		//Swap front and back buffer
 		SDL_GL_SwapWindow(pSettings->Window.pWindow);

@@ -92,7 +92,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;DevIL.lib;ILU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
@@ -126,7 +126,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;DevIL.lib;ILU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
@@ -160,6 +160,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Screenshot.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SpriteFont.cpp" />
     <ClCompile Include="StaticDependancies\glad\glad.cpp" />
@@ -182,6 +183,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Screenshot.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Singleton.h" />

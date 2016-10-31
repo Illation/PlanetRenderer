@@ -21,6 +21,9 @@ public:
 			Title("OpenGl Planet Renderer"),
 			pWindow(nullptr)
 		{
+			#if defined(DEBUG) | defined(_DEBUG)
+				Fullscreen = false;
+			#endif
 			Width = Fullscreen ? 1920 : 1280;
 			Height = Fullscreen ? 1080 : 720;
 		}

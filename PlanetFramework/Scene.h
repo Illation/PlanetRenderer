@@ -19,6 +19,7 @@ public:
 	void Update();
 
 	void Draw();
+	void PostDraw();
 
 private:
 	//Context

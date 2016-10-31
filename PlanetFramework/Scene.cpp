@@ -9,6 +9,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include "Screenshot.h"
+
 Scene::Scene()
 {
 	m_pPlanet = new Planet();
@@ -26,13 +28,18 @@ void Scene::Init()
 	m_pConObj->pScene = this;
 	CONTEXT->SetContext(m_pConObj);
 
+	//Initialize text rendering
 	TextRenderer::GetInstance()->Init();
 	m_pDebugFont->Load("./Fonts/Consolas_32.fnt");
 
-	m_pPlanet->Init();
+	//Init screenshot capturer
+	Screenshot::GetInstance()->Init("./Screenshots/");
 
+	//Init planet stuff
+	m_pPlanet->Init();
 	m_pCamera->SetPlanet(m_pPlanet);
 
+	//start time
 	m_pConObj->pTime->Start();
 }
 
@@ -55,6 +62,11 @@ void Scene::Update()
 			renderMode = SOLID;
 			break;
 		}
+	}
+
+	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_F1))
+	{
+		Screenshot::GetInstance()->Take();
 	}
 
 	m_pPlanet->Update();
@@ -93,12 +105,19 @@ void Scene::Draw()
 	TextRenderer::GetInstance()->Draw();
 }
 
+void Scene::PostDraw()
+{
+	//Take a screenshot
+	Screenshot::GetInstance()->Capture();
+}
+
 Scene::~Scene()
 {
 	SafeDelete(m_pPlanet);
 
 	SafeDelete(m_pDebugFont);
 	TextRenderer::GetInstance()->DestroyInstance();
+	Screenshot::GetInstance()->DestroyInstance();
 
 	SafeDelete(m_pTime);
 	SafeDelete(m_pCamera);
