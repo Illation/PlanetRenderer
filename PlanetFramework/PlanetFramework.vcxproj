@@ -174,6 +174,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Triangulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryReader.h" />
@@ -195,6 +196,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Triangulator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

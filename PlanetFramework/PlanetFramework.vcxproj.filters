@@ -74,6 +74,9 @@
     <ClCompile Include="Screenshot.cpp">
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Triangulator.cpp">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StaticDependancies\glad\glad.h">
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="Screenshot.h">
       <Filter>Source Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangulator.h">
+      <Filter>Source Files\PlanetTech</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

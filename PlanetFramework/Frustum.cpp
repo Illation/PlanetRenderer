@@ -42,7 +42,7 @@ void Frustum::SetToCamera(Camera* pCamera)
 void Frustum::Update()
 {
 	//calculate generalized relative width and aspect ratio
-	float normHalfWidth = tan(glm::radians(m_FOV))/2;
+	float normHalfWidth = tan(glm::radians(m_FOV));
 	float aspectRatio = (float)WINDOW.Width / (float)WINDOW.Height;
 
 	//calculate width and height for near and far plane
