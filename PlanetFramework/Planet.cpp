@@ -67,8 +67,8 @@ void Planet::Update()
 
 	m_pTransform->UpdateTransforms();
 
-	//Change Planet
-	//***************
+	//Change Planet Geometry
+	//**********************
 	if (m_pTriangulator->Update())
 	{
 		//Change the actual vertex positions
