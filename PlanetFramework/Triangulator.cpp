@@ -98,14 +98,16 @@ bool Triangulator::Update()
 
 void Triangulator::Precalculate()
 {
+	//determine culling angle behind planet based on max height
+	float cullingAngle = acosf(m_pPlanet->GetRadius()/(m_pPlanet->GetRadius()+m_pPlanet->GetMaxHeight()));
 	//Dot Product LUT
 	m_TriLevelDotLUT.clear();
-	m_TriLevelDotLUT.push_back(0.5f);
-	float angle = acosf(m_TriLevelDotLUT[0]);
+	m_TriLevelDotLUT.push_back(0.5f+sinf(cullingAngle));
+	float angle = acosf(0.5f);
 	for (int i = 1; i <= m_MaxLevel; i++)
 	{
 		angle *= 0.5f;
-		m_TriLevelDotLUT.push_back(sin(angle));
+		m_TriLevelDotLUT.push_back(sinf(angle+cullingAngle));
 	}
 	//height multipliers
 	m_HeightMultLUT.clear();
@@ -115,6 +117,7 @@ void Triangulator::Precalculate()
 	glm::vec3 center = (a + b + c) / 3.f;
 	center *= m_pPlanet->GetRadius() / glm::length(center);//+maxHeight
 	m_HeightMultLUT.push_back(1 / glm::dot(glm::normalize(a), glm::normalize(center)));
+	float normMaxHeight = m_pPlanet->GetMaxHeight() / m_pPlanet->GetRadius();
 	for (int i = 1; i <= m_MaxLevel; i++)
 	{
 		glm::vec3 A = b + ((c - b)*0.5f);
@@ -123,7 +126,7 @@ void Triangulator::Precalculate()
 		a = A*m_pPlanet->GetRadius() / glm::length(A);
 		b = B*m_pPlanet->GetRadius() / glm::length(B);
 		c *= m_pPlanet->GetRadius() / glm::length(c);
-		m_HeightMultLUT.push_back(1 / glm::dot(glm::normalize(a), glm::normalize(center)));
+		m_HeightMultLUT.push_back(1 / glm::dot(glm::normalize(a), glm::normalize(center)) + normMaxHeight);
 	}
 }
 

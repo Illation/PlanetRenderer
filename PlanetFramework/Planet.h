@@ -18,6 +18,7 @@ public:
 	void DrawWire();
 
 	float GetRadius(){ return m_Radius; }
+	float GetMaxHeight() { return m_MaxHeight; }
 	int GetVertexCount();
 	Transform* GetTransform() { return m_pTransform; }
 
@@ -29,6 +30,7 @@ private:
 	Transform *m_pTransform = nullptr;
 	bool m_Rotate = false;
 	Texture* m_pDiffuse = nullptr;
+	Texture* m_pHeight = nullptr;
 
 	Triangulator* m_pTriangulator;
 

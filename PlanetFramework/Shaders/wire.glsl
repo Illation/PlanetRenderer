@@ -6,9 +6,15 @@
 	uniform mat4 model;
 	uniform mat4 viewProj;
 	
+	uniform sampler2D texHeight;
+	uniform float maxHeight = 10.7f;
+	
 	void main()
 	{
-		gl_Position = viewProj * model * vec4(position, 1.0f);
+		vec3 Tex3 = normalize(position);
+		vec2 uv = vec2(atan( Tex3.z, Tex3.x )/6.28318530718, acos( Tex3.y )/3.14159265359f);
+		vec3 pos = position+Tex3*(texture(texHeight, uv).r*maxHeight);
+		gl_Position = viewProj * model * vec4(pos, 1.0f);
 	}
 </VERTEX>
 <FRAGMENT>

@@ -20,6 +20,7 @@ Planet::Planet()
 	m_pWireShader = new Shader("./Shaders/wire.glsl");
 
 	m_pDiffuse = new Texture("./Textures/moon8k.jpg");
+	m_pHeight = new Texture("./Textures/MoonHeight.jpg");
 }
 
 void Planet::Init()
@@ -40,6 +41,10 @@ void Planet::Init()
 	//LoadTextures
 	m_pDiffuse->Load();
 	glUniform1i(glGetUniformLocation(m_pTriangleShader->GetProgram(), "texDiffuse"), 0);
+	m_pHeight->Load();
+	glUniform1i(glGetUniformLocation(m_pTriangleShader->GetProgram(), "texHeight"), 1);
+	glUseProgram(m_pWireShader->GetProgram());
+	glUniform1i(glGetUniformLocation(m_pWireShader->GetProgram(), "texHeight"), 1);
 
 	m_pTriangulator->Init();
 
@@ -62,6 +67,7 @@ void Planet::Init()
 void Planet::Update()
 {
 	m_pTransform->SetPosition(0, 0, 0);
+	//m_pTransform->SetPosition(m_Radius*sinf(TIME->GetTime()), 0, 0);
 	if (INPUT->IsKeyboardKeyPressed('r'))m_Rotate = !m_Rotate;
 	if(m_Rotate)m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), -(GLfloat)TIME->DeltaTime() * 0.1f, glm::vec3(0.0f, 1.0f, 0.0f)));
 
@@ -97,6 +103,8 @@ void Planet::Draw()
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_pDiffuse->GetHandle());
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_pHeight->GetHandle());
 
 	//Bind Object vertex array
 	glBindVertexArray(m_VAO);
@@ -115,6 +123,9 @@ void Planet::DrawWire()
 	// Pass transformations to the shader
 	glUniformMatrix4fv(m_uModelWire, 1, GL_FALSE, glm::value_ptr(m_pTransform->GetTransform()));
 	glUniformMatrix4fv(m_uViewProjWire, 1, GL_FALSE, glm::value_ptr(CAMERA->GetViewProj()));
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_pHeight->GetHandle());
 
 	//Bind Object vertex array
 	glBindVertexArray(m_VAO);

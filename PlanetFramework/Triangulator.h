@@ -57,13 +57,15 @@ private:
 	void RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level, bool frustumCull);
 
 	//Triangulation paramenters
-	float m_AllowedTriPx = 60.f;
+	float m_AllowedTriPx = 40.f;
 	int m_MaxLevel = 15;
 
 	std::vector<Tri> m_Icosahedron;
 	std::vector<float> m_DistanceLUT;
 	std::vector<float> m_TriLevelDotLUT;
 	std::vector<float> m_HeightMultLUT;
+
+	std::vector<Tri*> m_Leafs;
 
 	Planet* m_pPlanet = nullptr;
 	Frustum* m_pFrustum = nullptr;

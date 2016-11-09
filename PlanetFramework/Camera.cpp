@@ -32,14 +32,14 @@ void Camera::Update()
 		m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), look.y, glm::vec3(1, 0, 0)));
 		m_pTransform->SetRotation(glm::rotate(m_pTransform->GetRotation(), look.x, glm::vec3(0, 1, 0)));
 	}
-	if (INPUT->IsKeyboardKeyDown(SDL_SCANCODE_KP_4))
-	{
-		m_FOV -= 30.f * TIME->DeltaTime();
-		m_Moved = true;
-	}
-	if (INPUT->IsKeyboardKeyDown(SDL_SCANCODE_KP_6))
+	if (INPUT->IsKeyboardKeyDown(SDL_SCANCODE_KP_4)&&m_FOV<110)
 	{
 		m_FOV += 30.f * TIME->DeltaTime();
+		m_Moved = true;
+	}
+	if (INPUT->IsKeyboardKeyDown(SDL_SCANCODE_KP_6)&&m_FOV>5)
+	{
+		m_FOV -= 30.f * TIME->DeltaTime();
 		m_Moved = true;
 	}
 	if (INPUT->IsKeyboardKeyDown('w'))
@@ -69,6 +69,10 @@ void Camera::Update()
 	float dist = m_pPlanet->GetRadius() + m_Altitude;
 	//std::cout << "Altitude (earth): " << (dist - m_pPlanet->GetRadius()) * (6371.f / m_pPlanet->GetRadius()) << std::endl;
 
+	//Calculate far plane based on planet
+	m_FarPlane = sqrtf(powf(m_pPlanet->GetRadius() + m_Altitude, 2) - powf(m_pPlanet->GetRadius(), 2)) +
+		sqrtf(powf(m_pPlanet->GetRadius() + m_pPlanet->GetMaxHeight(), 2) - powf(m_pPlanet->GetRadius(), 2));
+	m_NearPlane = m_FarPlane*0.000003f;
 
 	m_pTransform->SetPosition(sin(m_Longitude)*dist, 0, -cos(m_Longitude)*dist);
 

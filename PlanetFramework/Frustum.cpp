@@ -53,7 +53,7 @@ void Frustum::Update()
 
 	//calculate near and far plane centers
 	auto nCenter = m_Position + m_Forward*m_NearPlane;
-	auto fCenter = m_Position + m_Forward*m_FarPlane*0.5f;
+	auto fCenter = m_Position + m_Forward*m_FarPlane *0.5f;
 
 	//construct corners of the near plane in the culled objects world space
 	auto na = glm::vec3(m_CullInverse*glm::vec4(nCenter + m_Up*nearHH - m_Right*nearHW, 0));

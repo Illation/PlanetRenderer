@@ -46,8 +46,6 @@ private:
 	Transform *m_pTransform = nullptr;
 	bool m_Moved = true;
 
-	float m_AltitudeMult = 6371.f;
-
 	//Camera projection
 	glm::mat4 m_View, 
 		m_Projection, 
