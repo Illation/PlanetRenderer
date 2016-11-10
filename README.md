@@ -8,11 +8,23 @@ I regularly post updates about this project on my blog: http://robert-lindner.co
 ####Terrain
 There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum.
 
-![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/SUInEza.jpg)
-![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/tjOinep.jpg)
+![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/csAW0tV.jpg)
+![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/qubk7gj.jpg)
 
-### Demo Video
-[![Link](https://i.ytimg.com/vi/Dvl5ecx_6Dw/maxresdefault.jpg)](https://www.youtube.com/watch?v=Dvl5ecx_6Dw)
+### Demo Video (Click to open)
+[![Link](https://i.ytimg.com/vi/66VysDSQ8Mw/maxresdefault.jpg)](https://www.youtube.com/watch?v=66VysDSQ8Mw)
+
+####Controls
+| Keys | Function |
+| :---: |:--- |
+| F1 | Screenshot |
+| F2 | Toggle Debug UI |
+| W - S | Change Camera Altitude |
+| A - D | Change Camera Longitude |
+| NUM4 - NUM6 | Change Camera Zoom |
+| Z | Toggle Wireframe |
+| SPACE | Lock Frustum |
+| R | Rotate Planet |
 
 ####Framework
 A lot of the code for the framework is copied from my openGL framework, but since I want a barebones techdemo as a result in order to keep all the code relevant, I did not code this in the framework itself.
