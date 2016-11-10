@@ -25,6 +25,8 @@ There is a recursively subdividing icosahedron. Triangles subdivide based on the
 | Z | Toggle Wireframe |
 | SPACE | Lock Frustum |
 | R | Rotate Planet |
+| UP - Down | Change max subdivisions |
+| LMB | Rotate View |
 
 ####Framework
 A lot of the code for the framework is copied from my openGL framework, but since I want a barebones techdemo as a result in order to keep all the code relevant, I did not code this in the framework itself.
