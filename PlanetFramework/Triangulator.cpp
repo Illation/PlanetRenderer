@@ -138,7 +138,7 @@ void Triangulator::GenerateGeometry()
 	m_DistanceLUT.clear();
 	float sizeL = glm::length(m_Icosahedron[0].a - m_Icosahedron[0].b);
 	float frac = tanf((m_AllowedTriPx * glm::radians(m_pFrustum->GetFOV())) / WINDOW.Width);
-	for (int level = 0; level < m_MaxLevel; level++)
+	for (int level = 0; level < m_MaxLevel+5; level++)
 	{
 		m_DistanceLUT.push_back(sizeL / frac);
 		sizeL *= 0.5f;
@@ -174,14 +174,20 @@ TriNext Triangulator::SplitHeuristic(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, s
 			//check if new splits are allowed
 			if (level >= m_MaxLevel)return TriNext::LEAF;
 			//split according to distance
-			if (glm::length(center - m_pFrustum->GetPositionOS()) < m_DistanceLUT[level])return TriNext::SPLIT;
+			float aDist = glm::length(a - m_pFrustum->GetPositionOS());
+			float bDist = glm::length(b - m_pFrustum->GetPositionOS());
+			float cDist = glm::length(c - m_pFrustum->GetPositionOS());
+			if (std::fminf(aDist, std::fminf(bDist, cDist)) < m_DistanceLUT[level])return TriNext::SPLIT;
 			return TriNext::LEAF;
 		}
 	}
 	//check if new splits are allowed
 	if (level >= m_MaxLevel)return TriNext::LEAF;
 	//split according to distance
-	if (glm::length(center - m_pFrustum->GetPositionOS()) < m_DistanceLUT[level])return TriNext::SPLITCULL;
+	float aDist = glm::length(a - m_pFrustum->GetPositionOS());
+	float bDist = glm::length(b - m_pFrustum->GetPositionOS());
+	float cDist = glm::length(c - m_pFrustum->GetPositionOS());
+	if (std::fminf(aDist, std::fminf(bDist, cDist)) < m_DistanceLUT[level])return TriNext::SPLITCULL;
 	return TriNext::LEAF;
 }
 
@@ -202,16 +208,14 @@ void Triangulator::RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, shor
 		C *= m_pPlanet->GetRadius() / glm::length(C);
 		//Make 4 new triangles
 		short nLevel = level + 1;
-		RecursiveTriangle(a, B, C, nLevel, next == SPLITCULL);
-		RecursiveTriangle(A, b, C, nLevel, next == SPLITCULL);
-		RecursiveTriangle(A, B, c, nLevel, next == SPLITCULL);
+		RecursiveTriangle(a, B, C, nLevel, next == SPLITCULL);//Winding is inverted
+		RecursiveTriangle(A, b, C, nLevel, next == SPLITCULL);//Winding is inverted
+		RecursiveTriangle(A, B, c, nLevel, next == SPLITCULL);//Winding is inverted
 		RecursiveTriangle(A, B, C, nLevel, next == SPLITCULL);
 	}
 	else //put the triangle in the buffer
 	{
-		m_Positions.push_back(a);
-		m_Positions.push_back(b);
-		m_Positions.push_back(c);
+		m_Positions.push_back(PatchInstance(level, a, b-a, c-a));
 	}
 }
 

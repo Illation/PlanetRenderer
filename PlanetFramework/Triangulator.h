@@ -2,6 +2,8 @@
 
 class Frustum;
 class Planet;
+class PatchInstance;
+#include "Patch.h"
 
 enum TriNext
 {
@@ -57,7 +59,7 @@ private:
 	void RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level, bool frustumCull);
 
 	//Triangulation paramenters
-	float m_AllowedTriPx = 40.f;
+	float m_AllowedTriPx = 800.f;
 	int m_MaxLevel = 15;
 
 	std::vector<Tri> m_Icosahedron;
@@ -71,6 +73,6 @@ private:
 	Frustum* m_pFrustum = nullptr;
 	bool m_LockFrustum = false;
 
-	std::vector<glm::vec3> m_Positions;
+	std::vector<PatchInstance> m_Positions;
 };
 

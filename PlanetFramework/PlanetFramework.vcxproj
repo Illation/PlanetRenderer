@@ -158,6 +158,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Patch.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Screenshot.cpp" />
@@ -182,6 +183,7 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClInclude Include="Context.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Patch.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Screenshot.h" />

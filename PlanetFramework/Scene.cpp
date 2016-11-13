@@ -63,7 +63,7 @@ void Scene::Update()
 			break;
 		}
 	}
-
+	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_F2))m_DrawUI = !m_DrawUI;
 	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_F1))
 	{
 		Screenshot::GetInstance()->Take();
@@ -92,17 +92,18 @@ void Scene::Draw()
 	}
 
 	//Debug Drawing
-	glDepthRange(0.0, 0.99999);
+	glDepthRange(0.0, 0.999999);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (renderMode == WIREFRAME || renderMode == OVERLAY)
 	{
+		//m_pPlanet->Draw();
 		m_pPlanet->DrawWire();
 	}
 
 	//Draw text
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDepthRange(0.00001, 1.0);
-	TextRenderer::GetInstance()->Draw();
+	glDepthRange(0.000001, 1.0);
+	if(m_DrawUI)TextRenderer::GetInstance()->Draw();
 }
 
 void Scene::PostDraw()

@@ -77,6 +77,9 @@
     <ClCompile Include="Triangulator.cpp">
       <Filter>Source Files\PlanetTech</Filter>
     </ClCompile>
+    <ClCompile Include="Patch.cpp">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StaticDependancies\glad\glad.h">
@@ -137,6 +140,9 @@
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Triangulator.h">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClInclude>
+    <ClInclude Include="Patch.h">
       <Filter>Source Files\PlanetTech</Filter>
     </ClInclude>
   </ItemGroup>

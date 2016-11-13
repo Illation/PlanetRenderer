@@ -34,6 +34,7 @@ private:
 		WIREFRAME,
 		OVERLAY
 	} renderMode = OVERLAY;
+	bool m_DrawUI = true;
 
 	SpriteFont* m_pDebugFont = nullptr;
 

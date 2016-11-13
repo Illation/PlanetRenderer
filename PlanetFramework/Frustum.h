@@ -3,6 +3,7 @@
 class Camera;
 class Camera;
 class Transform;
+class Shader;
 
 struct Plane
 {
@@ -41,11 +42,6 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	void SetShaderAccessors(GLint model, GLint viewProj)
-	{
-		m_uModelWire = model;
-		m_uViewProjWire = viewProj;
-	}
 
 	void SetToCamera(Camera* pCamera);
 	void SetCullTransform(glm::mat4 objectWorld);
@@ -79,6 +75,7 @@ private:
 	std::vector<glm::vec3> m_Corners;
 	GLuint m_VAO;
 	GLuint m_VBO;
+	Shader *m_pWireShader = nullptr;
 	GLint m_uModelWire;
 	GLint m_uViewProjWire;
 };

@@ -3,13 +3,22 @@
 
 #include "Transform.h"
 #include "Camera.h"
+#include "Shader.h"
 
 Frustum::Frustum()
 {
+	m_pWireShader = new Shader("./Shaders/wire.glsl");
 }
 
 void Frustum::Init()
 {
+	//Handle planet material
+	m_pWireShader->Build();
+	glUseProgram(m_pWireShader->GetProgram());
+	m_uModelWire = glGetUniformLocation(m_pWireShader->GetProgram(), "model");
+	m_uViewProjWire = glGetUniformLocation(m_pWireShader->GetProgram(), "viewProj");
+	glUniform1i(glGetUniformLocation(m_pWireShader->GetProgram(), "texHeight"), 1);
+
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
 	glBindVertexArray(m_VAO);
@@ -152,6 +161,7 @@ VolumeTri Frustum::ContainsTriVolume(glm::vec3 &a, glm::vec3 &b, glm::vec3 &c, f
 
 void Frustum::Draw()
 {
+	glUseProgram(m_pWireShader->GetProgram());
 	//Rebind the vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, m_Corners.size() * sizeof(glm::vec3), m_Corners.data(), GL_STATIC_DRAW);
@@ -174,4 +184,6 @@ void Frustum::Draw()
 
 Frustum::~Frustum()
 {
+	glUseProgram(m_pWireShader->GetProgram());
+	SafeDelete(m_pWireShader);
 }

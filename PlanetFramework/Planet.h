@@ -5,6 +5,7 @@ class Transform;
 class Frustum;
 class Texture;
 class Triangulator;
+class Patch;
 
 class Planet
 {
@@ -21,6 +22,9 @@ public:
 	float GetMaxHeight() { return m_MaxHeight; }
 	int GetVertexCount();
 	Transform* GetTransform() { return m_pTransform; }
+	Triangulator* GetTriangulator() { return m_pTriangulator; }
+	Texture* GetHeightMap() { return m_pHeight; }
+	Texture* GetDiffuseMap() { return m_pDiffuse; }
 
 private:
 	//Planet parameters
@@ -32,17 +36,6 @@ private:
 	Texture* m_pDiffuse = nullptr;
 	Texture* m_pHeight = nullptr;
 
-	Triangulator* m_pTriangulator;
-
-	//OpenGl stuff
-	GLuint m_VAO;
-	GLuint m_VBO;
-
-	Shader *m_pTriangleShader = nullptr;
-	GLint m_uModel;
-	GLint m_uViewProj;
-
-	Shader *m_pWireShader = nullptr;
-	GLint m_uModelWire;
-	GLint m_uViewProjWire;
+	Triangulator* m_pTriangulator = nullptr;
+	Patch* m_pPatch = nullptr;
 };
