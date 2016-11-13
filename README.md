@@ -2,11 +2,11 @@
 ###A repo for my research on planet rendering in c++ | opengl
 
 ####Description
-This will grow over the next few months as I add more content. Nothing is set in stone yet, I am currently researching terrain algorithms.
+Basic Planet rendering using a version of the CDLOD algorithm with triangles instead of quads on an icosahedron.
 I regularly post updates about this project on my blog: http://robert-lindner.com/blog/category/project/planet-renderer/
 
 ####Terrain
-There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum.
+There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum. When drawn, every triangle instances a patch geometry, which allows for insane level of detail at high framerates, and morphs smoothly between subdivision levels.
 
 ![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/csAW0tV.jpg)
 ![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/qubk7gj.jpg)
