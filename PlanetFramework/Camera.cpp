@@ -2,7 +2,8 @@
 #include "Camera.h"
 
 #include "Transform.h"
-#include "Planet.h"
+
+#include "./PlanetTech/Planet.h"
 
 Camera::Camera() :
 	m_FOV(45),

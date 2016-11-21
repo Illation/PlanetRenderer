@@ -24,6 +24,9 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{acc93442-29fa-4790-a95d-4d3db1ed217b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PlanetTech\Types">
+      <UniqueIdentifier>{0d32126c-a6e8-4121-b392-77c6b7efe2e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,9 +44,6 @@
     <ClCompile Include="Time.cpp">
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Planet.cpp">
-      <Filter>Source Files\PlanetTech</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -55,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Frustum.cpp">
-      <Filter>Source Files\PlanetTech</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Graphics</Filter>
@@ -74,11 +71,23 @@
     <ClCompile Include="Screenshot.cpp">
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Triangulator.cpp">
+    <ClCompile Include="PlanetTech\Types\Moon.cpp">
+      <Filter>Source Files\PlanetTech\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetTech\Frustum.cpp">
       <Filter>Source Files\PlanetTech</Filter>
     </ClCompile>
-    <ClCompile Include="Patch.cpp">
+    <ClCompile Include="PlanetTech\Patch.cpp">
       <Filter>Source Files\PlanetTech</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetTech\Planet.cpp">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetTech\Triangulator.cpp">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetTech\Types\Earth.cpp">
+      <Filter>Source Files\PlanetTech\Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,9 +115,6 @@
     <ClInclude Include="Context.h">
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Planet.h">
-      <Filter>Source Files\PlanetTech</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
@@ -120,9 +126,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Frustum.h">
-      <Filter>Source Files\PlanetTech</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source Files\Graphics</Filter>
@@ -139,11 +142,29 @@
     <ClInclude Include="Screenshot.h">
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Triangulator.h">
+    <ClInclude Include="PlanetTech\Types\Moon.h">
+      <Filter>Source Files\PlanetTech\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\Frustum.h">
       <Filter>Source Files\PlanetTech</Filter>
     </ClInclude>
-    <ClInclude Include="Patch.h">
+    <ClInclude Include="PlanetTech\Patch.h">
       <Filter>Source Files\PlanetTech</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\Planet.h">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\Triangulator.h">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\Types\stdafx.h">
+      <Filter>Source Files\PlanetTech\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\stdafx.h">
+      <Filter>Source Files\PlanetTech</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetTech\Types\Earth.h">
+      <Filter>Source Files\PlanetTech\Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

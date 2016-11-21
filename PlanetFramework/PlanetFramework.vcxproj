@@ -155,11 +155,14 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
   <ItemGroup>
     <ClCompile Include="BinaryReader.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Patch.cpp" />
-    <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="PlanetTech\Frustum.cpp" />
+    <ClCompile Include="PlanetTech\Patch.cpp" />
+    <ClCompile Include="PlanetTech\Planet.cpp" />
+    <ClCompile Include="PlanetTech\Triangulator.cpp" />
+    <ClCompile Include="PlanetTech\Types\Earth.cpp" />
+    <ClCompile Include="PlanetTech\Types\Moon.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Screenshot.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -175,16 +178,20 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Triangulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryReader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
-    <ClInclude Include="Frustum.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="Patch.h" />
-    <ClInclude Include="Planet.h" />
+    <ClInclude Include="PlanetTech\Frustum.h" />
+    <ClInclude Include="PlanetTech\Patch.h" />
+    <ClInclude Include="PlanetTech\Planet.h" />
+    <ClInclude Include="PlanetTech\stdafx.h" />
+    <ClInclude Include="PlanetTech\Triangulator.h" />
+    <ClInclude Include="PlanetTech\Types\Earth.h" />
+    <ClInclude Include="PlanetTech\Types\Moon.h" />
+    <ClInclude Include="PlanetTech\Types\stdafx.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Screenshot.h" />
     <ClInclude Include="Settings.h" />
@@ -198,7 +205,6 @@ xcopy "$(S_LIBS)\DevIL\lib\DevIL.dll" "$(OutDir)" /y/D</Command>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="Triangulator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
