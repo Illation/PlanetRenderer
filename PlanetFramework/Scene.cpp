@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Camera.h"
+#include "./PlanetTech/Types/Moon.h"
 #include "./PlanetTech/Types/Earth.h"
 #include "SpriteFont.h"
 #include "TextRenderer.h"
@@ -13,7 +14,7 @@
 
 Scene::Scene()
 {
-	m_pPlanet = new Earth();
+	m_pPlanet = new Moon();
 	m_pDebugFont = new SpriteFont();
 }
 

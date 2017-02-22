@@ -59,7 +59,7 @@ private:
 	void RecursiveTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, short level, bool frustumCull);
 
 	//Triangulation paramenters
-	float m_AllowedTriPx = 800.f;
+	float m_AllowedTriPx = 300.f;
 	int m_MaxLevel = 15;
 
 	std::vector<Tri> m_Icosahedron;

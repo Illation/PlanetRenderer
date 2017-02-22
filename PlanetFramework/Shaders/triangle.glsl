@@ -32,6 +32,8 @@
 	
 	uniform sampler2D texDiffuse;
 	uniform sampler2D texHeight;
+	uniform sampler2D texDetail1;
+	uniform sampler2D texDetail2;
 	
 	uniform vec3 lightDir = vec3(-1, -0.3, 1);
 	
@@ -65,6 +67,7 @@
 		uv.y = acos( tc3.y );
 		uv /= vec2( 2.0f * 3.14159265359f, 3.14159265359f );
 		vec3 dif = texture(texDiffuse, uv).rgb;
+		dif = texture(texDetail1, uv).rgb;
 		
 		//Calculate normal
 		// read neightbor heights using an arbitrary small offset

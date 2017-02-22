@@ -35,6 +35,9 @@ void Patch::Init()
 
 	glUniform1i(glGetUniformLocation(m_pPatchShader->GetProgram(), "texDiffuse"), 0);
 	glUniform1i(glGetUniformLocation(m_pPatchShader->GetProgram(), "texHeight"), 1);
+	glUniform1i(glGetUniformLocation(m_pPatchShader->GetProgram(), "texDetail1"), 2);
+	glUniform1i(glGetUniformLocation(m_pPatchShader->GetProgram(), "texDetail2"), 3);
+	glUniform1i(glGetUniformLocation(m_pPatchShader->GetProgram(), "texHeightDetail"), 4);
 	
 	//Buffer Initialisation
 	//*********************
@@ -176,6 +179,12 @@ void Patch::Draw(bool white)
 	glBindTexture(GL_TEXTURE_2D, m_pPlanet->GetDiffuseMap()->GetHandle());
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_pPlanet->GetHeightMap()->GetHandle());
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_pPlanet->GetDetail1Map()->GetHandle());
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, m_pPlanet->GetDetail2Map()->GetHandle());
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, m_pPlanet->GetHeightDetailMap()->GetHandle());
 
 	//Bind Object vertex array
 	glBindVertexArray(m_VAO);
