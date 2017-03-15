@@ -1,5 +1,9 @@
 #pragma once
-#include <glm\gtc\quaternion.hpp>
+#ifdef PLATFORM_Win
+	#include <glm\gtc\quaternion.hpp>
+#else
+	#include <glm/gtc/quaternion.hpp>
+#endif
 class Transform
 {
 public:

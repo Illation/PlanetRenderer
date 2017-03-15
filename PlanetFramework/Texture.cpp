@@ -4,7 +4,7 @@
 
 #include <IL/il.h>
 #include <IL/ilu.h>
-#include <IL/ilut.h>
+//#include <IL/ilut.h>
 
 
 Texture::Texture(const std::string& filename)

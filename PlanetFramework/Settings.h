@@ -1,7 +1,11 @@
 #pragma once
 #include "Singleton.h"
 #include <string>
-#include <SDL.h>
+#ifdef PLATFORM_Win
+	#include <SDL.h>
+#else
+	#include <SDL2/SDL.h>
+#endif
 
 struct Settings : public Singleton<Settings>
 {

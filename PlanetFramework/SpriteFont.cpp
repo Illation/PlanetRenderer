@@ -4,6 +4,10 @@
 #include "BinaryReader.h"
 #include "Texture.h"
 
+#ifndef PLATFORM_Win
+	#include <cstring>
+#endif
+
 SpriteFont::SpriteFont() :
 	m_pTexture(nullptr),
 	m_CharacterCount(0),
@@ -19,7 +23,11 @@ SpriteFont::SpriteFont() :
 {
 	for (int i = 0; i < CHAR_COUNT; ++i)
 	{
+#ifdef PLATFORM_Win
 		ZeroMemory((void*)&m_CharTable[i], sizeof(FontMetric));
+#else
+		std::memset((void*)&m_CharTable[i], 0, sizeof(FontMetric));
+#endif
 		m_CharTable[i].IsValid = false;
 	}
 }

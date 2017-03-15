@@ -2,9 +2,14 @@
 
 #pragma region
 //SDL and opengl Header files
-#include "staticDependancies/glad/glad.h"
-#include <SDL.h>
-#include <SDL_opengl.h>
+#include "StaticDependancies/glad/glad.h"
+#ifdef PLATFORM_Win
+	#include <SDL.h>
+	#include <SDL_opengl.h>
+#else
+	#include <SDL2/SDL.h>
+	#include <SDL2/SDL_opengl.h>
+#endif
 #pragma endregion sdl-opengl
 
 #pragma region
@@ -22,7 +27,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #pragma warning(pop)
-#define GLM_LEFT_HANDED
+#ifndef GLM_LEFT_HANDED
+	#define GLM_LEFT_HANDED
+#endif
 #pragma endregion glm
 
 #pragma region
@@ -52,3 +59,10 @@ inline void SafeDelete(T &pObjectToDelete)
 #define CAMERA Context::GetInstance()->pCamera
 #define INPUT InputManager::GetInstance()
 #pragma endregion Macros
+
+//TODO move this to a custom file with a solid ruleset
+#define UINT32 unsigned int
+#define UINT unsigned int
+#define BYTE char
+#define USHORT unsigned short
+#define UCHAR unsigned char

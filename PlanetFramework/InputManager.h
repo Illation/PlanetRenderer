@@ -1,7 +1,12 @@
 #pragma once
 #include <map>
-#include <SDL.h>
-#include <glm\glm.hpp>
+#ifdef PLATFORM_Win
+	#include <SDL.h>
+	#include <glm\glm.hpp>
+#else
+	#include <SDL2/SDL.h>
+	#include <glm/glm.hpp>
+#endif
 #include "Singleton.h"
 //----------------------------
 //Event Manager class definintion

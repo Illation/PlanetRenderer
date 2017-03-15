@@ -10,7 +10,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "Screenshot.h"
+//#include "Screenshot.h"
 
 Scene::Scene()
 {
@@ -34,7 +34,7 @@ void Scene::Init()
 	m_pDebugFont->Load("./Fonts/Consolas_32.fnt");
 
 	//Init screenshot capturer
-	Screenshot::GetInstance()->Init("./Screenshots/");
+	//Screenshot::GetInstance()->Init("./Screenshots/");
 
 	//Init planet stuff
 	m_pPlanet->Init();
@@ -67,7 +67,7 @@ void Scene::Update()
 	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_F2))m_DrawUI = !m_DrawUI;
 	if (INPUT->IsKeyboardKeyPressed(SDL_SCANCODE_F1))
 	{
-		Screenshot::GetInstance()->Take();
+	//	Screenshot::GetInstance()->Take();
 	}
 
 	m_pPlanet->Update();
@@ -75,15 +75,23 @@ void Scene::Update()
 
 void Scene::Draw()
 {
+	//Draw debug info
 	TextRenderer::GetInstance()->SetFont(m_pDebugFont);
 	TextRenderer::GetInstance()->SetColor(glm::vec4(1, 0.3f, 0.3f, 1));
-	TextRenderer::GetInstance()->DrawText("FPS: " + std::to_string((int)TIME->FPS()), glm::vec2(20, 20));
+	auto fpsStr = std::string("FPS: ")+std::to_string((int)TIME->FPS());
+	TextRenderer::GetInstance()->DrawText(fpsStr, glm::vec2(20, 20));
+
 	TextRenderer::GetInstance()->SetColor(glm::vec4(1, 1, 1, 1));
-	TextRenderer::GetInstance()->DrawText("vertex count: " + std::to_string(m_pPlanet->GetVertexCount()), glm::vec2(20, 60));
+	auto vertStr = std::string("vertex count: ") + std::to_string(m_pPlanet->GetVertexCount());
+	TextRenderer::GetInstance()->DrawText(vertStr, glm::vec2(20, 60));
+
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(3) << m_pCamera->GetAltitude();
-	TextRenderer::GetInstance()->DrawText("altitude: " + ss.str() + "km", glm::vec2(20, 100));
-	TextRenderer::GetInstance()->DrawText("FOV: " + std::to_string(m_pCamera->GetFOV()), glm::vec2(20, 140));
+	auto altStr = std::string("altitude: ") + ss.str() + "km";
+	TextRenderer::GetInstance()->DrawText(altStr, glm::vec2(20, 100));
+
+	auto fovStr = std::string("FOV: ") + std::to_string(m_pCamera->GetFOV());
+	TextRenderer::GetInstance()->DrawText(fovStr, glm::vec2(20, 140));
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDepthRange(0.00001, 1.0);
@@ -110,7 +118,7 @@ void Scene::Draw()
 void Scene::PostDraw()
 {
 	//Take a screenshot
-	Screenshot::GetInstance()->Capture();
+	//Screenshot::GetInstance()->Capture();
 }
 
 Scene::~Scene()
@@ -119,7 +127,7 @@ Scene::~Scene()
 
 	SafeDelete(m_pDebugFont);
 	TextRenderer::GetInstance()->DestroyInstance();
-	Screenshot::GetInstance()->DestroyInstance();
+	//Screenshot::GetInstance()->DestroyInstance();
 
 	SafeDelete(m_pTime);
 	SafeDelete(m_pCamera);

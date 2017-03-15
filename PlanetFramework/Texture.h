@@ -1,8 +1,13 @@
 #pragma once
+
+#include <string>
+
+#include "stdafx.h"
+
 class Texture
 {
 public:
-	Texture(const std::string& filename);
+	Texture(const std::string &filename);
 	~Texture();
 
 	void Load(bool useSRGB = false);

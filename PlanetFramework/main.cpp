@@ -4,7 +4,7 @@
 
 #include <IL/il.h>
 #include <IL/ilu.h>
-#include <IL/ilut.h>
+//#include <IL/ilut.h>
 
 //**************************************
 //Functions for debugging
@@ -29,6 +29,7 @@ static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint i
 	std::cout << std::endl;
 }
 #endif
+#ifdef PLATFORM_Win
 void SetDebuggingOptions()
 {
 	//notify user if heap is corrupt
@@ -43,17 +44,20 @@ void SetDebuggingOptions()
 	//_CrtSetBreakAlloc(247);
 #endif
 }
+#endif
 
 //**************************************
 //Main
 //**************************************
 int main(int argc, char *argv[])
 {
+#ifdef PLATFORM_Win
 	UNREFERENCED_PARAMETER(argv);
 	UNREFERENCED_PARAMETER(argc);
 
 	//Catch memory leaks etc
 	SetDebuggingOptions();
+#endif
 
 	//Initialize SDL, OpenGL, DevIL and GLAD
 	//**************************************
