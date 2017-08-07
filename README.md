@@ -1,4 +1,8 @@
 # PlanetRenderer
+
+## **Work in this repository has been discontinued. The project lives on in a new repository, as it has been merged with my openGL framework: https://github.com/Illation/ETEngine**
+
+
 ### A repo for my research on planet rendering in c++ | opengl
 
 #### Description
