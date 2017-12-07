@@ -2,7 +2,7 @@
 
 class Frustum;
 class Planet;
-class PatchInstance;
+struct PatchInstance;
 #include "Patch.h"
 
 enum TriNext

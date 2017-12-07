@@ -15,7 +15,7 @@ struct PatchVertex
 };
 struct PatchInstance
 {
-	PatchInstance(BYTE Level, glm::vec3 A, glm::vec3 R, glm::vec3 S)
+	PatchInstance(short Level, glm::vec3 A, glm::vec3 R, glm::vec3 S)
 	{
 		level = Level;
 		a = A;

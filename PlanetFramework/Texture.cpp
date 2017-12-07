@@ -17,13 +17,19 @@ void Texture::Load(bool useSRGB)
 
 	std::cout << "Loading Texture: " << m_Name << " . . . ";
 
+#ifdef PLATFORM_Linux
+	std::string name = m_Name;
+#else
+	std::wstring name( m_Name.begin(), m_Name.end() );
+#endif
+
 	glGenTextures(1, &m_Handle);
 	glBindTexture(GL_TEXTURE_2D, m_Handle);
 
 	ILuint imgName;
 	ilGenImages(1, &imgName);
 	ilBindImage(imgName);
-	if (ilLoadImage(m_Name.c_str()))
+	if (ilLoadImage(name.c_str()))
 	{
 		ilConvertImage(IL_RGB, IL_FLOAT);
 
