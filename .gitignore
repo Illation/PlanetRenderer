@@ -14,3 +14,4 @@ PlanetFramework/PlanetFramework.VC.db
 *.vcxproj.user
 *.suo
 *.sln
+*.VC.opendb

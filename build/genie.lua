@@ -1,7 +1,8 @@
 solution "PlanetRenderer"
     configurations {
         "Release",
-        "Debug"
+        "Debug",
+		"Shipping"
     }
 
     platforms {
@@ -41,13 +42,13 @@ project "PlanetFramework"
         defines { "WIN32", "PLATFORM_Win" }
 		includedirs { "$(S_LIBS)/SDL2/include", "$(S_LIBS)/DevIL/include", "$(S_LIBS)/glm" }
 		debugdir "$(OutDir)"
-		libdirs { "$(S_LIBS)/SDL2/lib/x86", "$(S_LIBS)/DevIL/lib", "$(S_LIBS)/DevIL" }
+		libdirs { "$(S_LIBS)/SDL2/lib/x86", "$(S_LIBS)/DevIL/lib/x86/unicode/Release" }
 		links { "DevIL", "ILUT" }
 		postbuildcommands { 
 			"xcopy \"$(S_LIBS)\\SDL2\\lib\\x86\\SDL2.dll\" \"$(OutDir)\" /y/D",
-			"xcopy \"$(S_LIBS)\\DevIL\\lib\\ILU.dll\" \"$(OutDir)\" /y/D",
-			"xcopy \"$(S_LIBS)\\DevIL\\lib\\ILUT.dll\" \"$(OutDir)\" /y/D",
-			"xcopy \"$(S_LIBS)\\DevIL\\lib\\DevIL.dll\" \"$(OutDir)\" /y/D",
+			"xcopy \"$(S_LIBS)\\DevIL\\lib\\x86\\unicode\\Release\\ILU.dll\" \"$(OutDir)\" /y/D",
+			"xcopy \"$(S_LIBS)\\DevIL\\lib\\x86\\unicode\\Release\\ILUT.dll\" \"$(OutDir)\" /y/D",
+			"xcopy \"$(S_LIBS)\\DevIL\\lib\\x86\\unicode\\Release\\DevIL.dll\" \"$(OutDir)\" /y/D",
 			
 			"xcopy \"$(SolutionDir)PlanetFramework\\Fonts\" \"$(OutDir)\\Fonts\" /s/i/y",
 			"xcopy \"$(SolutionDir)PlanetFramework\\Textures\" \"$(OutDir)\\Textures\" /s/i/y",
@@ -85,6 +86,6 @@ project "PlanetFramework"
     --pchheader path.join(SOURCE_DIR, "stdafx.h")
     --pchsource path.join(SOURCE_DIR, "stdafx.cpp")
 
-    -- optional. This is purely cosmetically.
+    -- optional. This is purely cosmetical.
     vpaths {
     }

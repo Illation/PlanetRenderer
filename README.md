@@ -45,7 +45,7 @@ Font files created with BMFont.
 #### Building
 
 This framework uses Genie to generate project files: https://github.com/bkaradzic/GENie
-You need to install it and use it from a terminal
+You need to install it and use it from a terminal, the easiest way to do that is adding it to your PATH
 You should obviously also be running on a computer that has the hardware and drivers for modern openGL.
 
 ##### Windows
@@ -56,9 +56,10 @@ Navigate to the folder where this readme is located in a terminal
     
 Open the generated visual studio solution
 
-To build the project you need to define an environment variable or macro for visual studio to find the above mentioned libraries.
+To build the project you need to define an environment variable or [a macro for visual studio](https://imgur.com/a/6uMFN) to find the above mentioned libraries.
 The variable is called "S_LIBS", and the value would be something like "C:\Dev\StaticLibraries".
 That folder needs to contain the .lib files and the include folders of SDL2, GLM and DevIL.
+For DevIL I suggest downloading the [Windows SDK at version 1.8](https://sourceforge.net/projects/openil/files/DevIL%20Windows%20SDK/1.8.0/).
 
 Hit F5
 
