@@ -80,6 +80,8 @@ Navigate to the folder where this readme is located in a terminal
     cp -R ./PlanetFramework/Fonts/ ./bin/release/
     cp -R ./PlanetFramework/Textures/ ./bin/release/
     cp -R ./PlanetFramework/Shaders/ ./bin/release/
-    
-    ./bin/release/PlanetFramework
+Navigate to the release folder to make sure that it is your working directory (for file loading)
+
+    cd ./bin/release
+    ./PlanetFramework
 
