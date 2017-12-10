@@ -87,7 +87,7 @@ void Patch::GenerateGeometry(short levels)
 	m_Indices.clear();
 	//Generate
 	m_Levels = levels;
-	m_RC = 1 + pow(2, (int)m_Levels);
+	m_RC = 1 + (unsigned int)pow(2, (int)m_Levels);
 
 	float delta = 1 / (float)(m_RC-1);
 

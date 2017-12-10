@@ -4,6 +4,7 @@
 //SDL and opengl Header files
 #include "StaticDependancies/glad/glad.h"
 #ifdef PLATFORM_Win
+	#define SDL_MAIN_HANDLED
 	#include <SDL.h>
 	#include <SDL_opengl.h>
 #else

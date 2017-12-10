@@ -8,6 +8,15 @@ PlanetFramework/PlanetFramework.VC.db
 /PlanetFramework/PlanetFramework.VC.VC.opendb
 /PlanetFramework/Screenshots
 
+/build/obj
+/bin
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.sln
+*.VC.opendb
+
 *.make
 Makefile
 build/obj/
