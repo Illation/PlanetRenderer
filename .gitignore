@@ -7,3 +7,12 @@ PlanetFramework/PlanetFramework.VC.db
 PlanetFramework/PlanetFramework.VC.db
 /PlanetFramework/PlanetFramework.VC.VC.opendb
 /PlanetFramework/Screenshots
+
+*.make
+Makefile
+build/obj/
+build/obj
+build/obj/*
+
+bin/*
+bin/
