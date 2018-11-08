@@ -7,13 +7,13 @@
 
 #### Description
 Basic Planet rendering using a version of the CDLOD algorithm with triangles instead of quads on an icosahedron.
-I regularly post updates about this project on my blog: http://robert-lindner.com/blog/category/project/planet-renderer/
+I regularly post updates about this project on my blog: http://leah-lindner.com/blog/category/project/planet-renderer/
 
 #### Terrain
 There is a recursively subdividing icosahedron. Triangles subdivide based on the distance from the camera and get culled when outside of the frustum. When drawn, every triangle instances a patch geometry, which allows for insane level of detail at high framerates, and morphs smoothly between subdivision levels.
 
-![Text Rendering Moon Planet terrain LOD Robert Lindner](http://i.imgur.com/csAW0tV.jpg)
-![OpenGL Planet terrain LOD Rendering Robert Lindner](http://i.imgur.com/qubk7gj.jpg)
+![Text Rendering Moon Planet terrain LOD Leah Lindner](http://i.imgur.com/csAW0tV.jpg)
+![OpenGL Planet terrain LOD Rendering Leah Lindner](http://i.imgur.com/qubk7gj.jpg)
 
 ### Demo Video (Click to open)
 [![Link](https://i.ytimg.com/vi/66VysDSQ8Mw/maxresdefault.jpg)](https://www.youtube.com/watch?v=66VysDSQ8Mw)
